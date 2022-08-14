@@ -9,3 +9,9 @@ growing need for better realtime message moderation to alert the platform owners
 actions to keep their users safe. Keeping users safe also helps them become more free and open to
 interaction and collabration. Thus benifiting whole community. 
 
+## Tech stack
+- Deployment platform: kubernetes
+- Experiment tracking: MLFLOW
+- Workflow orchestration: argo workflow
+- CI/CD: github, argo
+- Monitoring: prometheus + graphana
