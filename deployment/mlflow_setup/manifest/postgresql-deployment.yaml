@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: mlflow.postgres
+data:
+  POSTGRES_DB: mlflowdb
+  POSTGRES_USER: mlflowuser
+  POSTGRES_PASSWORD: mlflowpass
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-stateful
+  labels:
+    app: mlflow.postgres
+spec:
+  serviceName: "postgres"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlflow.postgres
+  template:
+    metadata:
+      labels:
+        app: mlflow.postgres
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:12
+        imagePullPolicy: "IfNotPresent"
+        envFrom:
+        - configMapRef:
+            name: postgres-config
+        ports:
+        - containerPort: 5432
+          name: postgresdb
+        volumeMounts:
+        - name: pv-data
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: pv-data
+        persistentVolumeClaim:
+          claimName: postgres-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata: 
+  name: postgres-service
+  labels:
+    app: mlflow.postgres
+spec:
+  ports:
+  - port: 5432
+    name: postgres
+  type: NodePort
+  selector:
+    app: mlflow.postgres
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: 
+  name: postgres-pv-claim
+  labels:
+    app: mlflow.postgres
+spec:
+  # storageClassName: kind-hostpath
+  capacity:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolume
+# apiVersion: v1
+# metadata:
+#   name: postgres-pv
+#   labels:
+#     app: mlflow.postgres
+#     type: local
+# spec:
+#   storageClassName: kind-hostpath
+#   capacity: 
+#     storage: 5Gi
+#   accessModes:
+#     - ReadWriteOnce
+#   hostPath:
+#     path: "/var/data"
+# ---
+# apiVersion: storage.k8s.io/v1
+# kind: StorageClass
+# metadata:
+#   name: kind-hostpath
+#   annotations:
+#     strageclass.kubernetes.io/is-default-class: "true"
+# provisioner: kubernetes.io/no-provisioner
+# volumeBindingMode: WaitForFirstConsumer
+
+

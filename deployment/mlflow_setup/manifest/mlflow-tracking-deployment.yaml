@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-tracking
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mlflow-tracking
+  template:
+    metadata:
+      labels:
+        app: mlflow-tracking
+    spec:
+      containers:
+        - name: mlflow-tracking
+          image: mlflow-tracking-server:latest
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - --backend-store-uri=postgresql://mlflowuser:mlflowpass@postgres-service:5432/mlflowdb
+            - --default-artifact-root=s3://mlflow/
+            - --host=0.0.0.0
+            - --port=5000
+            - --workers=2
+          env:
+            - name: MLFLOW_S3_ENDPOINT_URL
+              value: http://minio:9000/ #http://10.107.116.50:9000/ #http://mlflow-minio.local:9000/
+            - name: AWS_ACCESS_KEY_ID
+              value: "admin" #"minio"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "password" #"minio123"
+            - name: MLFLOW_S3_IGNORE_TLS
+              value: "true"
+          # resources:
+          #   limits:
+          #     memory: "128Mi"
+          #     cpu: "500m"
+          ports:
+            - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow-tracking-service
+spec:
+  selector:
+    app: mlflow-tracking
+  ports:
+    - port: 5000
+      targetPort: 5000
+  type: NodePort

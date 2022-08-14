@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: # kpt-merge: /minio
+  name: minio
+  labels:
+    app: minio
+spec:
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+        - name: main
+          image: minio/minio:RELEASE.2019-12-17T23-16-33Z
+          env:
+            - name: MINIO_ACCESS_KEY
+              value: admin
+            - name: MINIO_SECRET_KEY
+              value: password
+          ports:
+            - containerPort: 9000
+          command: [minio, server, /data]
+          lifecycle:
+            postStart:
+              exec:
+                command: [mkdir, -p, /data/my-bucket]
+          readinessProbe:
+            httpGet:
+              path: /minio/health/ready
+              port: 9000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /minio/health/live
+              port: 9000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          volumeMounts:
+            - name: mlflow-minio-pvc
+              mountPath: "/data"
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: 1000m
+      volumes:
+        - name: mlflow-minio-pvc
+          persistentVolumeClaim:
+            claimName: minio-pvc-claim
+---
+apiVersion: v1
+kind: Service
+metadata: # kpt-merge: /minio
+  name: minio
+  labels:
+    app: minio
+spec:
+  selector:
+    app: minio
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000
+      nodePort: 30608
+  type: NodePort
+---
+apiVersion: v1
+stringData:
+  accesskey: admin
+  secretkey: password
+kind: Secret
+metadata: # kpt-merge: /my-minio-cred
+  name: my-minio-cred
+  labels:
+    app: minio
+type: Opaque
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: minio-pvc-claim
+  labels:
+    app: minio
+spec:
+  # storageClassName: kind-hostpath
+  capacity:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
