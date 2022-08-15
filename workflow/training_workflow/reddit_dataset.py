@@ -5,14 +5,13 @@ class DataSource:
         pass
 
 class RedditDataset(DataSource):
-    def __init__(self, data_dir, filename):        
-        self.data_dir= data_dir
+    def __init__(self, filename):                
         self.columns = ["prev_idx", "body", "score", "parent_id", "id", "created_date", "retrieved_date", "removed"]
+        # self.columns = ["","X","BODY","REMOVED"]
         self.filename = filename
-    def _get_dataframe(self, name):
-        dataset_filename = f'{self.data_dir}/{name}'
+    def _get_dataframe(self, filename):
         dataset = pd.read_csv(
-            dataset_filename,
+            filename,
             names=self.columns,
             skiprows=1,
             encoding='ISO-8859-1'
@@ -20,10 +19,14 @@ class RedditDataset(DataSource):
         return dataset
     def get_data(self):
         dataset = self._get_dataframe(self.filename)        
-        return dataset['body']   
+        body_key = 'body'
+        # body_key = 'BODY'
+        return dataset[body_key]   
     def get_labels(self):
         dataset = self._get_dataframe(self.filename)
-        return dataset['removed']
+        removed_key = 'removed'
+        # removed_key = 'REMOVED'
+        return dataset[removed_key]
 
 if __name__ == '__main__':
     train_dataset = 'reddit_200k_train.csv'
