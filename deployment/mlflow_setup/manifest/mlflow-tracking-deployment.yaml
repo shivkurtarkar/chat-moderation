@@ -16,14 +16,9 @@ spec:
         - name: mlflow-tracking
           image: mlflow-tracking-server:latest
           imagePullPolicy: "IfNotPresent"
-          args:
-            - --backend-store-uri=postgresql://mlflowuser:mlflowpass@postgres-service:5432/mlflowdb
-            - --default-artifact-root=s3://mlflow/
-            - --host=0.0.0.0
-            - --port=5000
-            - --workers=2
           env:
             - name: MLFLOW_S3_ENDPOINT_URL
+              # value: http://172.18.0.2:30608/
               value: http://minio:9000/ #http://10.107.116.50:9000/ #http://mlflow-minio.local:9000/
             - name: AWS_ACCESS_KEY_ID
               value: "admin" #"minio"
@@ -31,6 +26,33 @@ spec:
               value: "password" #"minio123"
             - name: MLFLOW_S3_IGNORE_TLS
               value: "true"
+            - name: AWS_BUCKET
+              value: mlflow
+            - name: DB_USER
+              value: mlflowuser
+            - name: DB_PASSWORD
+              value: mlflowpass
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: mlflowdb
+            - name: DB_HOST
+              value: postgres-service
+          args:
+            - --host=0.0.0.0
+            - --port=5000
+            - --workers=2
+            - --backend-store-uri=postgresql://mlflowuser:mlflowpass@postgres-service:5432/mlflowdb
+            - --artifacts-destination=s3://mlflow
+            - --serve-artifacts
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - mlflow
+                  - db
+                  - upgrade
+                  - postgresql://mlflowuser:mlflowpass@postgres-service:5432/mlflowdb
           # resources:
           #   limits:
           #     memory: "128Mi"
