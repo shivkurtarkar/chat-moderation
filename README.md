@@ -9,8 +9,18 @@ growing need for better realtime message moderation to alert the platform owners
 actions to keep their users safe. Keeping users safe also helps them become more free and open to
 interaction and collabration. Thus benifiting whole community. 
 
+
+## Dataset 
+-   [rscience-popular-comment-removal](https://www.kaggle.com/datasets/areeves87/rscience-popular-comment-removal?resource=download)<br>
+
+-- other datasets
+-   [jigsaw-toxic-comment-classification-challenge](https://www.kaggle.com/competitions/jigsaw-toxic-comment-classification-challenge/code)<br>
+-   [malignant-comment-classification](https://www.kaggle.com/datasets/surekharamireddy/malignant-comment-classification?select=train.csv)<br>
+-   [reddit-comment-score-prediction](https://www.kaggle.com/datasets/ehallmar/reddit-comment-score-prediction)<br>
+<br>
+
 ## Tech stack
-- Deployment platform: kubernetes
+- Deployment platform: kubernetes, kserve
 - Experiment tracking: MLFLOW
 - Workflow orchestration: argo workflow
 - CI/CD: github, argo
