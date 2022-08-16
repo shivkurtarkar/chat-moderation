@@ -53,12 +53,15 @@ def predict_endpoint():
     message = request.get_json()
     
     body = message['body']
-    pred = reddit_classifier.predict(body)
-
+    
+    pred = reddit_classifier.predict([body])
+    pred = pred.tolist()[0]
     result = {
         'score': pred,
         'model_version': RUN_ID
     }
+    print(result)
+    return jsonify(result)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=9696)
