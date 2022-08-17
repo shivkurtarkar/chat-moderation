@@ -7,6 +7,10 @@ name = "pypi"
 pandas = "*"
 numpy = "*"
 pyarrow = "*"
+mlflow = "*"
+protobuf = "==3.20.*"
+boto3 = "*"
+kaggle = "*"
 
 [dev-packages]
 notebook = "*"
