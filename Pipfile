@@ -11,6 +11,8 @@ mlflow = "*"
 protobuf = "==3.20.*"
 boto3 = "*"
 kaggle = "*"
+hera = "*"
+hera-workflows = "*"
 
 [dev-packages]
 notebook = "*"
