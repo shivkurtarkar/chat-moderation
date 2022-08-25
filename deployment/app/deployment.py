@@ -13,14 +13,14 @@ def load_pickle(filename):
         return pickle.load(handle)
 
 
-RUN_ID = '841a91a87cc64991b3ee679e4175f0e8'
+RUN_ID = '316eae0f743b4692a9bcb5149e77407d'
 MLFLOW_TRACKING_URI = 'http://172.18.0.2:31989'
 # MLFLOW_TRACKING_URI ='http://0.0.0.0:5000'
 EXPERIMENT = 'text-moderation-model'
-TOKENIZER_PATH = './output/tokenizer.pkl'
+TOKENIZER_PATH = '../../workflow/output/tokenizer.pkl'
 
 
-# mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
 # client = MlflowClient(tracking_uri=MLFLOW_TRACKING_URI)
 # experiment = client.get_experiment_by_name(EXPERIMENT)
 # print(experiment)
