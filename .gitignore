@@ -166,3 +166,4 @@ pprs.md
 models
 *.pkl
 .vscode
+kaggle.json
