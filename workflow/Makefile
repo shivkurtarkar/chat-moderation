@@ -1,3 +1,4 @@
+export MLFLOW_TRACKING_URI		:=  http://172.18.0.2:31989/
 export MLFLOW_S3_ENDPOINT_URL	:=	http://172.18.0.2:30608/
 export AWS_ACCESS_KEY_ID		:=	admin
 export AWS_SECRET_ACCESS_KEY	:=	password
