@@ -88,6 +88,7 @@ def training_pipeline(argo_host, argo_token):
                 "mlflow_tracking_url": "http://172.18.0.2:31989"
             }],
             variables=[
+                VariableAsEnv(name="MLFLOW_TRACKING_URI", value="http://172.18.0.2:31989/"),
                 VariableAsEnv(name="MLFLOW_S3_ENDPOINT_URL", value="http://172.18.0.2:30608/"),
                 VariableAsEnv(name="AWS_ACCESS_KEY_ID", value="admin"),
                 VariableAsEnv(name="AWS_SECRET_ACCESS_KEY", value="password"),
