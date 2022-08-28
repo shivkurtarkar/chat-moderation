@@ -3,6 +3,7 @@
 import argparse
 from hera import Task, Workflow, WorkflowService
 from hera import SecretVolume, Resources,ImagePullPolicy, AccessMode, EmptyDirVolume, OutputArtifact, InputArtifact
+from hera import VariableAsEnv
 
 import uuid
 
@@ -79,13 +80,19 @@ def training_pipeline(argo_host, argo_token):
         )
         train_model_task  = Task(
             'train-model-task',
-            train_model,
+            train_model,            
             func_params=[{
                 "data_path" :dataset_path,
                 "dataset": "reddit",
                 "experiment": "text-moderation-model",
                 "mlflow_tracking_url": "http://172.18.0.2:31989"
             }],
+            variables=[
+                VariableAsEnv(name="MLFLOW_S3_ENDPOINT_URL", value="http://172.18.0.2:30608/"),
+                VariableAsEnv(name="AWS_ACCESS_KEY_ID", value="admin"),
+                VariableAsEnv(name="AWS_SECRET_ACCESS_KEY", value="password"),
+                VariableAsEnv(name="MLFLOW_S3_IGNORE_TLS", value="true")
+            ],
             input_artifacts=[InputArtifact("dataset", dataset_path, "preprocess-data", "dataset")],            
             # output_artifacts=[OutputArtifact("dataset", dataset_path)],
             image='workflow-python:latest',
