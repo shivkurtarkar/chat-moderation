@@ -68,7 +68,13 @@ def load_pickle(filename):
     with open(filename, 'rb') as handle:
         return pickle.load(handle)
 
-def run(data_path, dataset):
+def run(data_path, dataset, experiment='new_experiment', mlflow_tracking_url=None):
+
+    if mlflow_tracking_url:
+        mlflow.set_tracking_uri(mlflow_tracking_url)
+        mlflow.set_experiment(experiment)
+        mlflow.tensorflow.autolog()
+
     X_train, y_train = load_pickle(os.path.join(data_path, 'train.pkl'))
     X_test, y_test = load_pickle(os.path.join(data_path, 'test.pkl'))
         
@@ -85,7 +91,6 @@ def run(data_path, dataset):
             validation_data=(X_test, y_test),
             callbacks=[]
         )
-        
 
 
 if __name__ == '__main__':    
@@ -104,10 +109,7 @@ if __name__ == '__main__':
     MLFLOW_TRACKING_URI = 'http://172.18.0.2:31989'
     # MLFLOW_TRACKING_URI ='http://0.0.0.0:5000'
     EXPERIMENT = 'text-moderation-model'
-    mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
-    mlflow.set_experiment(EXPERIMENT)
-    mlflow.tensorflow.autolog()
-    run(args.data_path, args.dataset)
+    run(args.data_path, args.dataset, EXPERIMENT, MLFLOW_TRACKING_URI)
     
     # print('evaluating ... ')
     # scores = model_evalute(model, X_test_embedding, y_test)
