@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: text-classification-svc
+spec:
+  selector:
+    app: text-classification-app
+  ports:
+    - name: http
+      port: 80
+      targetPort: 9696
+      nodePort: 31424
+  type: NodePort

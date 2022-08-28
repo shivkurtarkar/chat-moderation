@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from reddit_classifier import RedditClassifier
 from transformers import TokenizerTransformer, PreprocessingTransformer
 import pickle
+import os
 
 import mlflow
 from mlflow.tracking import MlflowClient
@@ -13,32 +14,31 @@ def load_pickle(filename):
         return pickle.load(handle)
 
 
-RUN_ID = '316eae0f743b4692a9bcb5149e77407d'
-MLFLOW_TRACKING_URI = 'http://172.18.0.2:31989'
-# MLFLOW_TRACKING_URI ='http://0.0.0.0:5000'
+RUN_ID = 'b8e9ea01b9404d6c98ed541a97d21607'
 EXPERIMENT = 'text-moderation-model'
-TOKENIZER_PATH = '../../workflow/output/tokenizer.pkl'
+# TOKENIZER_PATH = '../../workflow/output/tokenizer.pkl'
+
+print("env---")
+print(f"MLFLOW_TRACKING_URI		: {os.getenv('MLFLOW_TRACKING_URI')} ")
+print(f"MLFLOW_S3_ENDPOINT_URL	: {os.getenv('MLFLOW_S3_ENDPOINT_URL')} ")
+print(f"AWS_ACCESS_KEY_ID		: {os.getenv('AWS_ACCESS_KEY_ID')} ")
+print(f"AWS_SECRET_ACCESS_KEY	: {os.getenv('AWS_SECRET_ACCESS_KEY')} ")
+print(f"MLFLOW_S3_IGNORE_TLS	: {os.getenv('MLFLOW_S3_IGNORE_TLS')} ")
+print()
+print(f"FLASK_APP	: {os.getenv('FLASK_APP')} ")
 
 
-mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
-# client = MlflowClient(tracking_uri=MLFLOW_TRACKING_URI)
-# experiment = client.get_experiment_by_name(EXPERIMENT)
-# print(experiment)
-# latest_runs = client.search_runs(
-#     experiment_ids=experiment.experiment_id,
-#     filter_string="",
-#     run_view_type=ViewType.ACTIVE_ONLY,
-#     max_results=10
-# )
-# print(latest_runs)
-# exit()
-
+print("downloading artifacts..")
 # Load model as a PyFuncModel.
 logged_model = f'runs:/{RUN_ID}/model'
 loaded_model = mlflow.pyfunc.load_model(logged_model)
 
+logged_tokenizer = f'runs:/{RUN_ID}/preprocess/tokenizer/tokenizer.pkl'
+tokenizer_path = mlflow.artifacts.download_artifacts(logged_tokenizer)
+loaded_tokenizer = load_pickle(tokenizer_path)
 
-loaded_tokenizer = load_pickle(TOKENIZER_PATH)
+print("successfully downloaded artifacts")
+
 transformer = TokenizerTransformer(
     loaded_tokenizer, 
     next_transformer=PreprocessingTransformer()
@@ -64,4 +64,5 @@ def predict_endpoint():
     return jsonify(result)
 
 if __name__ == '__main__':
+    print("starting application")
     app.run(debug=True, host='0.0.0.0', port=9696)

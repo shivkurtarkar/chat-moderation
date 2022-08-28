@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: text-classification-app
+spec:
+  selector:
+    matchLabels:
+      app: text-classification-app
+  template:
+    metadata:
+      labels:
+        app: text-classification-app
+    spec:
+      containers:
+        - name: text-classification-app
+          image: text-classification
+          imagePullPolicy: Always
+          env:
+            - name: MLFLOW_TRACKING_URI
+              value: "http://172.18.0.2:31989/"
+              # value: "mlflow-tracking-service"
+            - name: MLFLOW_S3_ENDPOINT_URL
+              value: "http://172.18.0.2:30608/"
+              # value: "minio"
+            - name: AWS_ACCESS_KEY_ID
+              value: "admin"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "password"
+            - name: MLFLOW_S3_IGNORE_TLS
+              value: "true"
+          # resources:
+          #   limits:
+          #     memory: "128Mi"
+          #     cpu: "500m"
+          ports:
+            - containerPort: 9696
+      imagePullSecrets:
+        - name: regcred
