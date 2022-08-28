@@ -7,8 +7,6 @@ from hera import SecretVolume, Resources,ImagePullPolicy, AccessMode, EmptyDirVo
 import uuid
 
 def download_from_kaggle(dataset, output_dir, unzip):
-    import sys
-    sys.path.insert(0, "/app")
     import os
     print("dirs--")
     print(os.listdir())
@@ -19,8 +17,6 @@ def download_from_kaggle(dataset, output_dir, unzip):
     print("download success")
 
 def preprocess_data(raw_data_path, dest_path, dataset):
-    import sys    
-    sys.path.insert(0, "/app")
     print("dirs--")    
     from preprocess import run as preprocess_run
     preprocess_run(raw_data_path, dest_path, dataset)

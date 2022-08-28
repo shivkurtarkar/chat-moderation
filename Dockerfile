@@ -1,6 +1,7 @@
 FROM python:3.10-slim
 
 WORKDIR /app
+ENV PYTHONPATH='/app'
 COPY Pipfile Pipfile.lock ./
 
 # RUN pipenv install --deploy --ignore-pipfile
