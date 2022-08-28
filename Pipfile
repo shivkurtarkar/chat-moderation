@@ -13,6 +13,7 @@ boto3 = "*"
 kaggle = "*"
 hera = "*"
 hera-workflows = "*"
+tensorflow = "*"
 
 [dev-packages]
 notebook = "*"
