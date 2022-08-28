@@ -7,6 +7,11 @@ RUN_ID := 316eae0f743b4692a9bcb5149e77407d
 
 run: download_data train_model evaluate_model
 
+preprocess:
+	python preprocess.py \
+		--raw_data_path './output' \
+		--dest_path './output' \
+		--dataset reddit
 download_data:
 	python download.py \
 		--dataset 'areeves87/rscience-popular-comment-removal' \
