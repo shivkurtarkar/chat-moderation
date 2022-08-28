@@ -68,12 +68,9 @@ def load_pickle(filename):
     with open(filename, 'rb') as handle:
         return pickle.load(handle)
 
-def run(data_path, dataset, experiment='new_experiment', mlflow_tracking_url=None):
-
-    if mlflow_tracking_url:
-        mlflow.set_tracking_uri(mlflow_tracking_url)
-        mlflow.set_experiment(experiment)
-        mlflow.tensorflow.autolog()
+def run(data_path, dataset, experiment='new_experiment'):
+    mlflow.set_experiment(experiment)
+    mlflow.tensorflow.autolog()
 
     # tokenizer = load_pickle(os.path.join(data_path, 'tokenizer.pkl'))
     tokenizer_path =os.path.join(data_path, 'tokenizer.pkl')
