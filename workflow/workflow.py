@@ -17,12 +17,14 @@ def download_from_kaggle(dataset, output_dir, unzip):
     print("download success")
 
 def preprocess_data(raw_data_path, dest_path, dataset):
-    print("dirs--")    
     from preprocess import run as preprocess_run
     preprocess_run(raw_data_path, dest_path, dataset)
+    print("preprocess success")
 
-def train_model():
-    pass
+def train_model(data_path, dataset, experiment, mlflow_tracking_url):
+    from training import run as training_run
+    training_run(data_path, dataset, experiment, mlflow_tracking_url)
+    print("training success")
 
 def evaluate_model():
     pass
@@ -69,7 +71,22 @@ def training_pipeline(argo_host, argo_token):
                 "dest_path": dataset_path,
                 "dataset": "reddit"
             }],
-            input_artifacts=[InputArtifact("dataset", dataset_path, "download-kaggle-data", "dataset")],
+            input_artifacts=[InputArtifact("dataset", dataset_path, "download-kaggle-data", "dataset")],            
+            output_artifacts=[OutputArtifact("dataset", dataset_path)],
+            image='workflow-python:latest',
+            image_pull_policy=ImagePullPolicy.IfNotPresent,
+            command=["python"]
+        )
+        train_model_task  = Task(
+            'train-model-task',
+            train_model,
+            func_params=[{
+                "data_path" :dataset_path,
+                "dataset": "reddit",
+                "experiment": "text-moderation-model",
+                "mlflow_tracking_url": "http://172.18.0.2:31989"
+            }],
+            input_artifacts=[InputArtifact("dataset", dataset_path, "preprocess-data", "dataset")],            
             # output_artifacts=[OutputArtifact("dataset", dataset_path)],
             image='workflow-python:latest',
             image_pull_policy=ImagePullPolicy.IfNotPresent,
@@ -77,7 +94,7 @@ def training_pipeline(argo_host, argo_token):
         )
         # evaluate_model_task = Task()
         
-        download_dataset_task >> preprocess_data_task #train_model_task #>> evaluate_model_task
+        download_dataset_task >> preprocess_data_task >> train_model_task #>> evaluate_model_task
     w.create()
 
 def main(argo_host, argo_token):
