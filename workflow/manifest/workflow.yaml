@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alphav1
+kind: Workflow
+metadata:
+  generateName: test-pipeline
+spec:
+  entrypoint: pipeline
+  templates:
+    - name: pipeline
+      dag:
+        tasks:
+          - name: data-processing-1
+            dependencies: []
+            templates: data-processing-1
+            arguments:
+              parameters: [{ name: method, value: download_data.py }]
+          - name: pca-1
+            dependencies: [data-processing-1]
+            templates: pca-1
+            arguments:
+              parameters: [{ name: method, value: pca.py }]
