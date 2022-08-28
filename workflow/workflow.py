@@ -4,12 +4,37 @@ import argparse
 from hera import Task, Workflow, WorkflowService
 from hera import SecretVolume, Resources,ImagePullPolicy, AccessMode, EmptyDirVolume, OutputArtifact, InputArtifact
 
-import download_dataset
-from preprocess import run as preprocess_run
+import uuid
 
-def training_pipeline(argo_host, argo_token):
+def download_from_kaggle(dataset, output_dir, unzip):
+    import sys
+    sys.path.insert(0, "/app")
+    import os
+    print("dirs--")
+    print(os.listdir())
+    print()
+    from download_dataset import download_from_kaggle
+    print("import sucess")
+    download_from_kaggle(dataset, output_dir, unzip)
+    print("download success")
+
+def preprocess_data(raw_data_path, dest_path, dataset):
+    import sys    
+    sys.path.insert(0, "/app")
+    print("dirs--")    
+    from preprocess import run as preprocess_run
+    preprocess_run(raw_data_path, dest_path, dataset)
+
+def train_model():
+    pass
+
+def evaluate_model():
+    pass
+
+def training_pipeline(argo_host, argo_token):    
     # workflow_name= 'text_classification_training'
-    workflow_name= 'download-preprocess'
+    unique_code= str(uuid.uuid4())
+    workflow_name= f'download-preprocess-{unique_code}'
     runin_namespace ='argo'
     with Workflow(workflow_name, WorkflowService(
             host=argo_host,
@@ -23,7 +48,7 @@ def training_pipeline(argo_host, argo_token):
 
         download_dataset_task = Task(
             'download-kaggle-data',
-            download_dataset.download_from_kaggle,
+            download_from_kaggle,
             func_params=[{
                 "dataset": 'areeves87/rscience-popular-comment-removal',
                 "output_dir": './output',
@@ -42,7 +67,7 @@ def training_pipeline(argo_host, argo_token):
         )
         preprocess_data_task  = Task(
             'preprocess-data',
-            preprocess_run,
+            preprocess_data,
             func_params=[{
                 "raw_data_path" :dataset_path,
                 "dest_path": dataset_path,
