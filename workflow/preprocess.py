@@ -47,7 +47,7 @@ def run(raw_data_path: str, dest_path: str, dataset:str = 'reddit'):
     #     oov_token='<UNK>'
     # )
     # texts = X_train.to_list()
-    # tokenizer.fit_on_texts(texts)        
+    # tokenizer.fit_on_texts(texts)
     tokenizer = get_trained_tokenizer(X_train)
 
 
