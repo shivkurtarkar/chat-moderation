@@ -75,6 +75,7 @@ def run(data_path, dataset, experiment='new_experiment', mlflow_tracking_url=Non
         mlflow.set_experiment(experiment)
         mlflow.tensorflow.autolog()
 
+    tokenizer = load_pickle(os.path.join(data_path, 'tokenizer.pkl'))
     X_train, y_train = load_pickle(os.path.join(data_path, 'train.pkl'))
     X_test, y_test = load_pickle(os.path.join(data_path, 'test.pkl'))
         
@@ -82,6 +83,7 @@ def run(data_path, dataset, experiment='new_experiment', mlflow_tracking_url=Non
     with mlflow.start_run():
         model = get_model()
         mlflow.log_param('dataset', dataset)
+        mlflow.log_artifact('tokenizer', tokenizer)
         print(model.summary())
         model.fit(
             X_train, y_train,
