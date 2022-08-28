@@ -19,7 +19,7 @@ RUN chmod 777 /app
 RUN mkdir /app/output
 RUN chmod 777 /app/output
 
-COPY ./workflow/*.py /app/
+COPY ./*.py /app/
 
 RUN useradd -ms /bin/bash newuser
 USER newuser

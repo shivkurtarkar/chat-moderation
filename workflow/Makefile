@@ -30,3 +30,7 @@ ARGO_TOKEN  := eyJhbGciOiJSUzI1NiIsImtpZCI6ImhrVVhIeUZYc190a3lFLWpQTDlVMnFUZUV3U
 
 argo_workflow:
 	python workflow.py --argo_host ${ARGO_HOST}	 --argo_token ${ARGO_TOKEN}
+
+build:
+	docker build -t workflow-python .
+	kind load docker-image workflow-python 
