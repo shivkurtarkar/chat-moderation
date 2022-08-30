@@ -22,9 +22,9 @@ def preprocess_data(raw_data_path, dest_path, dataset):
     preprocess_run(raw_data_path, dest_path, dataset)
     print("preprocess success")
 
-def train_model(data_path, dataset, experiment, mlflow_tracking_url):
+def train_model(data_path, dataset, experiment):
     from training import run as training_run
-    training_run(data_path, dataset, experiment, mlflow_tracking_url)
+    training_run(data_path, dataset, experiment)
     print("training success")
 
 def evaluate_model():
@@ -84,12 +84,11 @@ def training_pipeline(argo_host, argo_token):
             func_params=[{
                 "data_path" :dataset_path,
                 "dataset": "reddit",
-                "experiment": "text-moderation-model",
-                "mlflow_tracking_url": "http://172.18.0.2:31989"
+                "experiment": "text-moderation-model"                
             }],
             variables=[
-                VariableAsEnv(name="MLFLOW_TRACKING_URI", value="http://172.18.0.2:31989/"),
-                VariableAsEnv(name="MLFLOW_S3_ENDPOINT_URL", value="http://172.18.0.2:30608/"),
+                VariableAsEnv(name="MLFLOW_TRACKING_URI", value="http://172.18.0.2:31989/"),  # value="http://mlflow-tracking-service:5000/"), 
+                VariableAsEnv(name="MLFLOW_S3_ENDPOINT_URL", value="http://172.18.0.2:30608/"),  # value="http://minio:9000/"), 
                 VariableAsEnv(name="AWS_ACCESS_KEY_ID", value="admin"),
                 VariableAsEnv(name="AWS_SECRET_ACCESS_KEY", value="password"),
                 VariableAsEnv(name="MLFLOW_S3_IGNORE_TLS", value="true")
