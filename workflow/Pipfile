@@ -11,8 +11,6 @@ mlflow = "*"
 protobuf = "==3.20.*"
 boto3 = "*"
 kaggle = "*"
-hera = "*"
-hera-workflows = "*"
 tensorflow = "*"
 sklearn = "*"
 matplotlib = "*"
@@ -20,6 +18,7 @@ matplotlib = "*"
 [dev-packages]
 notebook = "*"
 ipykernel = "*"
+hera-workflows = "*"
 
 [requires]
 python_version = "3.10"
