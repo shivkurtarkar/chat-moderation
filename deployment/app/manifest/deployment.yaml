@@ -18,18 +18,18 @@ spec:
           env:
             - name: MLFLOW_TRACKING_URI
               value: "http://172.18.0.2:31989/"
-              # value: "mlflow-tracking-service"
+              # value: "mlflow-tracking-service:5000/"
             - name: MLFLOW_S3_ENDPOINT_URL
+              # value: "minio:9000/"
               value: "http://172.18.0.2:30608/"
-              # value: "minio"
             - name: AWS_ACCESS_KEY_ID
               value: "admin"
             - name: AWS_SECRET_ACCESS_KEY
               value: "password"
             - name: MLFLOW_S3_IGNORE_TLS
               value: "true"
-          # resources:
-          #   limits:
+          resources: {}
+          #  limits:
           #     memory: "128Mi"
           #     cpu: "500m"
           ports:
