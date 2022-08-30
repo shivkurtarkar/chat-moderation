@@ -29,3 +29,26 @@ $curl https://localhost:2746/api/v1/workflows/argo -H "Authorization: $ARGO_TOKE
 
 refrence
 https://towardsdatascience.com/creating-containerized-workflows-with-argo-ec1011b04370
+
+install argocd
+kubectl create namespace argocd
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+
+sudo apt install argocd
+
+change argocd server tyep
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+
+get password 
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+
+argocd login <server_ip:port>
+
+kubectl config get-contexts -o name
+argocd cluster add kind-kind
+
+kubectl create ns chat-moderation
+argocd app create text-classification --repo git@github.com:shivkurtarkar/chat-moderation.git --path deployment/app/manifest  --dest-server https://kubernetes.default.svc --dest-namespace chat-moderation
+
+argocd app get text-classification
+argocd app sync text-classification
