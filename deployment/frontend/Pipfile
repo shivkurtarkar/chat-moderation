@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 streamlit = "*"
 streamlit-chat = "*"
+petname = "*"
 
 [dev-packages]
 

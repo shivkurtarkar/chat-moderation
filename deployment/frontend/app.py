@@ -3,6 +3,7 @@ from streamlit_chat import message, AvatarStyle
 import json
 import os
 import datetime
+import petname
 
 BOT_AVATAR="jdenticon" #gridy
 USER_AVATAR="micah"
@@ -37,8 +38,9 @@ def clear_message_history(chat_id):
     init_new_chat(chat_id)
 
 def get_user_id():
-    return 'user0000'
-
+    if 'user' not in st.session_state:        
+        st.session_state['user'] = petname.generate()
+    return st.session_state['user']
 
 class MessagingPage:
     def __init__(self, chat_id):
