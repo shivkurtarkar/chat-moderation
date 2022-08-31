@@ -8,16 +8,8 @@ import petname
 BOT_AVATAR="jdenticon" #gridy
 USER_AVATAR="micah"
 JSON_FILE = 'message_history.json'
-
-def load_data(chat_id):
-    with open(JSON_FILE, 'r') as file:
-        return json.load(file)
-
-def save_data(chat_id, message_history):
-    with open(JSON_FILE, 'w') as file:
-        json.dump(message_history, file)
-
-def init_new_chat(chat_id):
+   
+def clear_message_history(chat_id):
     welcome_messages = [
         {
             "message": f"Hi {chat_id}, "
@@ -27,21 +19,17 @@ def init_new_chat(chat_id):
             "key": datetime.datetime.now().timestamp()
         }
     ]    
-    save_data(chat_id, welcome_messages)
+    write_message_history(chat_id, welcome_messages)
 
 def load_message_history(chat_id):
-    if not os.path.exists(chat_id):
-        init_new_chat(chat_id)
-    return load_data(chat_id)
+    if 'message_history' not in st.session_state:
+        print('mesg-hist init')        
+        st.session_state['message_history'] = []    
+        # print(f'message_history {st.session_state["message_history"]}')
+    return st.session_state['message_history']
 
 def write_message_history(chat_id, message_history):
-    # if os.path.exists(chat_id):
-    #     with open(chat_id, 'r') as file:
-    #         data = json.load(file)
-        # data.append(message)
-        save_data(chat_id, message_history)        
-def clear_message_history(chat_id):
-    init_new_chat(chat_id)
+    st.session_state['message_history'] = message_history
 
 
 def get_user_id():
