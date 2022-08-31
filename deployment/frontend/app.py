@@ -9,7 +9,8 @@ BOT_AVATAR="jdenticon" #gridy
 USER_AVATAR="micah"
 JSON_FILE = 'message_history.json'
    
-def clear_message_history(chat_id):
+def init_message_history(chat_id):
+    print('message-history init')
     welcome_messages = [
         {
             "message": f"Hi {chat_id}, "
@@ -23,8 +24,7 @@ def clear_message_history(chat_id):
 
 def load_message_history(chat_id):
     if 'message_history' not in st.session_state:
-        print('mesg-hist init')        
-        st.session_state['message_history'] = []    
+        init_message_history(st.session_state['user'])        
         # print(f'message_history {st.session_state["message_history"]}')
     return st.session_state['message_history']
 
@@ -56,7 +56,7 @@ class MessagingPage:
     def on_clear_chat_history(self):
         print("clear button")
         input_=''
-        clear_message_history(self.chat_id)
+        init_message_history(self.chat_id)
         self.placeholder.empty()
         # st.experimental_rerun()
     def on_message_send(self):
