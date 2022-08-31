@@ -3,7 +3,12 @@ kind: Application
 metadata:
   name: messaging-app
 spec:
+  destination:
+    name: ""
+    namespace: chat-moderation
+    server: "https://kubernetes.default.svc"
   source:
-    repoURL: git@github.com:shivkurtarkar/chat-moderation.git
-    targetRevision: HEAD
     path: deployment/frontend/manifest/
+    repoURL: "git@github.com:shivkurtarkar/chat-moderation.git"
+    targetRevision: HEAD
+  project: default
