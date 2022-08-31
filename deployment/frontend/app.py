@@ -7,6 +7,16 @@ import petname
 
 BOT_AVATAR="jdenticon" #gridy
 USER_AVATAR="micah"
+JSON_FILE = 'message_history.json'
+
+def load_data(data):
+    with open(chat_id, 'r') as file:
+        return json.load(file)
+
+def save_data(data):
+    with open(chat_id, 'w') as file:
+        json.dump(data, file)
+
 
 def init_new_chat(chat_id):
     welcome_messages = [
@@ -18,14 +28,12 @@ def init_new_chat(chat_id):
             "key": datetime.datetime.now().timestamp()
         }
     ]    
-    with open(chat_id, 'w') as file:
-        json.dump(welcome_messages, file)
+    save_data(welcome_messages)
 
 def load_message_history(chat_id):
     if not os.path.exists(chat_id):
         init_new_chat(chat_id)
-    with open(chat_id, 'r') as file:
-        return json.load(file)
+    return load_data()
 
 def write_message_history(chat_id, message_history):
     # if os.path.exists(chat_id):
@@ -36,6 +44,7 @@ def write_message_history(chat_id, message_history):
             return json.dump(message_history, file)
 def clear_message_history(chat_id):
     init_new_chat(chat_id)
+
 
 def get_user_id():
     if 'user' not in st.session_state:        
