@@ -1,0 +1,15 @@
+apiVersion: v1
+data:
+  config.ini: |-
+    [app]
+    BOT_AVATAR=jdenticon
+    USER_AVATAR=micah
+    MODERATED_MESSAGE =## MESSAGE MODERATED ##
+
+    [moderation_service]
+    ENDPOINT=http://172.18.0.2:31424/predict
+    THRESHOLD=0.4213
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: messaging-config
