@@ -6,12 +6,11 @@ import datetime
 
 BOT_AVATAR="jdenticon" #gridy
 USER_AVATAR="micah"
-MESSAGE_HISTORY = "message_history.json"
 
 def init_new_chat(chat_id):
     welcome_messages = [
         {
-            "message": "Hi <User>, "
+            "message": f"Hi {chat_id}, "
                 "welcome to chat moderation service."
                 "Please type messages to experience chat moderation service",
             "is_user": False,
@@ -37,46 +36,67 @@ def write_message_history(chat_id, message_history):
 def clear_message_history(chat_id):
     init_new_chat(chat_id)
 
-def on_message_send(placeholder):
-    value = st.session_state.new_message_box
-    print(value)
+def get_user_id():
+    return 'user0000'
 
 
-def main(chat_id = MESSAGE_HISTORY):
-
-    st.title("Chat moderation service")
-    st.write("""
-        Chat moderation service aims to detect and flag unhealty chat messages.
-        And reduce burden on moderators.
-    """)
-
-    message_history = load_message_history(chat_id)    
-
-    for message_ in message_history:    
-        avatar = USER_AVATAR if message_["is_user"] else BOT_AVATAR
-        message(
-            message_["message"],
-            is_user=message_["is_user"],
-            avatar_style=avatar, 
-            key=message_["key"]
-        )
-
-    placeholder = st.empty()
-    cols = st.columns([3,1,1])
-    with cols[0]:
-        input_ = st.text_input("you:", on_change=on_message_send, args=(placeholder,), key='new_message_box')
-    with cols[1]:
-        send_button =st.button("send")
-    with cols[2]:
-        clear_history_button =st.button("Clear history")
-    
-    if clear_history_button:
+class MessagingPage:
+    def __init__(self, chat_id):
+        self.chat_id = chat_id
+        self.reload_message_history()
+        self.window()
+    def reload_message_history(self):
+        self.message_history = load_message_history(self.chat_id)
+    def render_chats(self):
+        for message_ in self.message_history:
+            avatar = USER_AVATAR if message_["is_user"] else BOT_AVATAR
+            message(
+                message_["message"],
+                is_user=message_["is_user"],
+                avatar_style=avatar, 
+                key=message_["key"]
+            )
+    def on_clear_chat_history(self):
         print("clear button")
         input_=''
-        clear_message_history(chat_id)
-        placeholder.empty()
+        clear_message_history(self.chat_id)
+        self.placeholder.empty()
         # st.experimental_rerun()
+    def on_message_send(self):
+        input_ = st.session_state.new_message_box
+        input_ = input_.strip()
+        with self.placeholder.container():
+            if input_ : #and send_button:
+                new_message_text = "## MESSAGE MODERATED ##" if "fuck" in input_ else input_
+                message_ = {
+                    "message": new_message_text,
+                    "is_user": True,
+                    "key": datetime.datetime.now().timestamp()
+                }
+                self.message_history.append(message_)
+                write_message_history(self.chat_id, self.message_history)
+                # avatar = USER_AVATAR if message_["is_user"] else BOT_AVATAR
+                # message(message_["message"], is_user=message_["is_user"], avatar_style=avatar, key=message_["key"])
+    def window(self):
+        st.title("Chat moderation service")
+        st.write("""
+            Chat moderation service aims to detect and flag unhealty chat messages.
+            And reduce burden on moderators.
+        """)
+        self.render_chats()
 
+        self.placeholder = st.empty()
+        cols = st.columns([3,1,1])
+        with cols[0]:
+            input_ = st.text_input("you:", on_change=self.on_message_send, key='new_message_box')            
+        with cols[1]:
+            send_button =st.button("send", on_click=self.on_message_send)
+        with cols[2]:
+            clear_history_button =st.button("Clear history", on_click=self.on_clear_chat_history)
+
+def main():
+    chat_id = get_user_id()
+    messaging_page = MessagingPage(chat_id)    
 
 if __name__=='__main__':
     main()
