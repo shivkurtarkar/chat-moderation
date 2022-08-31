@@ -8,6 +8,6 @@ spec:
   ports:
     - name: http
       port: 80
-      targetPort: 8051
+      targetPort: 8501
       nodePort: 31425
   type: NodePort
