@@ -15,11 +15,18 @@ spec:
         - name: messaging-app
           image: messaging-app
           imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /app/config
+              name: messaging-config-volume
           resources: {}
           #  limits:
           #     memory: "128Mi"
           #     cpu: "500m"
           ports:
             - containerPort: 8501
+      volumes:
+        - name: messaging-config-volume
+          configMap:
+            name: messaging-config
       imagePullSecrets:
         - name: regcred
