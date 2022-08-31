@@ -9,14 +9,13 @@ BOT_AVATAR="jdenticon" #gridy
 USER_AVATAR="micah"
 JSON_FILE = 'message_history.json'
 
-def load_data(data):
-    with open(chat_id, 'r') as file:
+def load_data(chat_id):
+    with open(JSON_FILE, 'r') as file:
         return json.load(file)
 
-def save_data(data):
-    with open(chat_id, 'w') as file:
-        json.dump(data, file)
-
+def save_data(chat_id, message_history):
+    with open(JSON_FILE, 'w') as file:
+        json.dump(message_history, file)
 
 def init_new_chat(chat_id):
     welcome_messages = [
@@ -28,20 +27,19 @@ def init_new_chat(chat_id):
             "key": datetime.datetime.now().timestamp()
         }
     ]    
-    save_data(welcome_messages)
+    save_data(chat_id, welcome_messages)
 
 def load_message_history(chat_id):
     if not os.path.exists(chat_id):
         init_new_chat(chat_id)
-    return load_data()
+    return load_data(chat_id)
 
 def write_message_history(chat_id, message_history):
     # if os.path.exists(chat_id):
     #     with open(chat_id, 'r') as file:
     #         data = json.load(file)
         # data.append(message)
-        with open(chat_id, 'w') as file:
-            return json.dump(message_history, file)
+        save_data(chat_id, message_history)        
 def clear_message_history(chat_id):
     init_new_chat(chat_id)
 
