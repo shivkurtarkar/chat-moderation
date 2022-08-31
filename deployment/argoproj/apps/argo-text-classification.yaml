@@ -6,4 +6,4 @@ spec:
   source:
     repoURL: git@github.com:shivkurtarkar/chat-moderation.git
     targetRevision: HEAD
-    path: deployment/app/manifest/
+    path: deployment/prediction_service/manifest/
