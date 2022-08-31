@@ -1,14 +1,16 @@
 import streamlit as st
 from streamlit_chat import message, AvatarStyle
-import json
 import os
 import datetime
 import petname
 
 BOT_AVATAR="jdenticon" #gridy
 USER_AVATAR="micah"
-JSON_FILE = 'message_history.json'
-   
+MODERATED_MESSAGE = "## MESSAGE MODERATED ##"   
+
+def message_moderated(message):
+    return "fuck" in message
+
 def init_message_history(chat_id):
     print('message-history init')
     welcome_messages = [
@@ -24,13 +26,11 @@ def init_message_history(chat_id):
 
 def load_message_history(chat_id):
     if 'message_history' not in st.session_state:
-        init_message_history(st.session_state['user'])        
-        # print(f'message_history {st.session_state["message_history"]}')
+        init_message_history(st.session_state['user'])
     return st.session_state['message_history']
 
 def write_message_history(chat_id, message_history):
     st.session_state['message_history'] = message_history
-
 
 def get_user_id():
     if 'user' not in st.session_state:        
@@ -63,8 +63,8 @@ class MessagingPage:
         input_ = st.session_state.new_message_box
         input_ = input_.strip()
         with self.placeholder.container():
-            if input_ : #and send_button:
-                new_message_text = "## MESSAGE MODERATED ##" if "fuck" in input_ else input_
+            if input_ :
+                new_message_text = MODERATED_MESSAGE if message_moderated(input_) else input_
                 message_ = {
                     "message": new_message_text,
                     "is_user": True,
@@ -72,8 +72,6 @@ class MessagingPage:
                 }
                 self.message_history.append(message_)
                 write_message_history(self.chat_id, self.message_history)
-                # avatar = USER_AVATAR if message_["is_user"] else BOT_AVATAR
-                # message(message_["message"], is_user=message_["is_user"], avatar_style=avatar, key=message_["key"])
     def window(self):
         st.title("Chat moderation service")
         st.write("""
