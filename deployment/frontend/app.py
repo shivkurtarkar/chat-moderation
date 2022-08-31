@@ -3,16 +3,43 @@ from streamlit_chat import message, AvatarStyle
 import os
 import datetime
 import petname
+import configparser
+import requests
+import logging
 
-BOT_AVATAR="jdenticon" #gridy
-USER_AVATAR="micah"
-MODERATED_MESSAGE = "## MESSAGE MODERATED ##"   
+logging.basicConfig(
+    format='%(asctime)s %(levelname)s %(message)s',
+    level=os.environ.get("LOGLEVEL", "INFO")
+)
+logger = logging.getLogger()
 
-def message_moderated(message):
-    return "fuck" in message
+config = configparser.ConfigParser()
+config.read('config/config.ini')
 
-def init_message_history(chat_id):
-    print('message-history init')
+BOT_AVATAR          = config['app'].get('BOT_AVATAR')
+USER_AVATAR         = config['app'].get('USER_AVATAR')
+MODERATED_MESSAGE   = config['app'].get('MODERATED_MESSAGE')
+
+PREDICTION_SERVICE_URL = config['moderation_service'].get('ENDPOINT')
+PREDICTION_SERVICE_THRESHOLD = config['moderation_service'].getfloat('THRESHOLD')
+
+def message_moderated(message):    
+    should_moderate = False
+    message = {
+        'body': message
+    }
+    url = PREDICTION_SERVICE_URL
+    print(f'URL: {url}')
+    try:
+        response = requests.post(url, json=message)
+        data = response.json()
+        print(data)
+        should_moderate =  data['score'][0] > PREDICTION_SERVICE_THRESHOLD
+    except Exception as e:
+        logger.error('error occured', e)
+    return should_moderate
+
+def init_message_history(chat_id):    
     welcome_messages = [
         {
             "message": f"Hi {chat_id}, "
@@ -54,7 +81,6 @@ class MessagingPage:
                 key=message_["key"]
             )
     def on_clear_chat_history(self):
-        print("clear button")
         input_=''
         init_message_history(self.chat_id)
         self.placeholder.empty()
@@ -81,12 +107,12 @@ class MessagingPage:
         self.render_chats()
 
         self.placeholder = st.empty()
-        cols = st.columns([3,1,1])
+        cols = st.columns([4,1])
         with cols[0]:
             input_ = st.text_input("you:", on_change=self.on_message_send, key='new_message_box')            
         with cols[1]:
-            send_button =st.button("send", on_click=self.on_message_send)
-        with cols[2]:
+        #     send_button =st.button("send", on_click=self.on_message_send)
+        # with cols[2]:
             clear_history_button =st.button("Clear history", on_click=self.on_clear_chat_history)
 
 def main():
