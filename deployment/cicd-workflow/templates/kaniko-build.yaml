@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ClusterWorkflowTemplate
+metadata:
+  name: container-image
+spec:
+    serviceAccountName: workflow
+    templates:
+    - name: build-kaniko-git
+      inputs:
+        artifacts:
+          - name: source
+            path: /src
+        parameters:
+          - name: path_to_docker
+            value: Dockerfile
+          - name: container_image            
+          - name: container_tag
+          - name: path_to_context
+            value: /src/
+      container:
+        image: gcr.io/kaniko-project/executor
+        command: [/kaniko/executor]
+        args:          
+         - --dockerfile={{inputs.parameters.path_to_docker}}
+         - --destination={{inputs.parameters.container_image}}:{{inputs.parameters.container_tag}}
+         - --context={{inputs.parameters.path_to_context}}          
+        workingDir: /src/
+        volumeMounts:
+          - name: argoregcred
+            mountPath: /kaniko/.docker
