@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: ci-workflow
+  namespace: argo
+spec:
+  entrypoint: workflow
+  volumes:
+    - name: argoregcred
+      secret:
+        secretName: argo-regcred
+  templates:
+    - name: workflow
+      steps:
+        - - name: git-clone
+            templateRef:
+              name: git-clone
+              template: git-clone
+              clusterScope: true
+            arguments:
+              parameters:
+                - name: repo_url
+                  value: git@github.com:shivkurtarkar/chat-moderation.git
+                - name: repo_commit_id
+                  value: HEAD
+                - name: repo_ssh_secret
+                  value: github-creds
+                - name: repo_ssh_key
+                  value: ssh-private-key
+        # - - name: unit-tests
+        - - name: build-and-push
+            templateRef:
+              name: container-image
+              template: build-kaniko-git
+              clusterScope: true
+            arguments:
+              artifacts:
+                - name: source
+                  from: "{{steps.git-clone.outputs.artifacts.source}}"
+              parameters:
+                - name: path_to_docker
+                  value: Dockerfile
+                - name: container_image
+                  value: shivamkurtarkar/messaging-app
+                - name: container_tag
+                  value: latest
+                - name: path_to_context
+                  value: /src/deployment/frontend/
+        # - - name: update-and-push-manifest
