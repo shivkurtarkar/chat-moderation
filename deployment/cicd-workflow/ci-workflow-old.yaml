@@ -1,0 +1,87 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: ci-workflow
+  namespace: argo
+spec:
+  entrypoint: workflow
+  volumes:
+    - name: argoregcred
+      secret:
+        secretName: argo-regcred
+
+  templates:
+    - name: git-clone
+      inputs:
+        parameters:
+          - name: repo
+            value: git@github.com:shivkurtarkar/chat-moderation.git
+          - name: revision
+            value: HEAD
+          - name: sshsecret
+            value: github-creds
+          - name: sshsecretkey
+            value: ssh-private-key
+        artifacts:
+          - name: argo-source
+            path: /src
+            git:
+              repo: "{{inputs.parameters.repo}}"
+              revision: "{{inputs.parameters.revision}}"
+              sshPrivateKeySecret:
+                name: "{{inputs.parameters.sshsecret}}"
+                key: "{{inputs.parameters.sshsecretkey}}"
+              depth: 1
+      outputs:
+        artifacts:
+          - name: source
+            path: /src
+      container:
+        image: golang:1.10
+        command: [sh, -c]
+        args: ["git status && ls"]
+        workindDir: /src
+      activeDeadlineSeconds: 60
+
+    - name: build-and-push
+      inputs:
+        artifacts:
+          - name: source
+            path: /src
+        parameters:
+          - name: pathToDockerFile
+            value: Dockerfile
+          - name: imageUrl
+            value: shivamkurtarkar/messaging-app
+          - name: imageTag
+            value: latest
+          - name: pathToContext
+            value: /src/
+          - name: dockerSecretFile
+            value: docker.config.json
+      container:
+        image: gcr.io/kaniko-project/executor
+        command: [/kaniko/executor]
+        args:
+          [
+            "--dockerfile={{inputs.parameters.pathToDockerFile}}",
+            "--destination={{inputs.parameters.imageUrl}}:{{inputs.parameters.imageTag}}",
+            "--context={{inputs.parameters.pathToContext}}",
+          ]
+        workindDir: /src/
+        volumeMounts:
+          - name: argoregcred
+            mountPath: /kaniko/.docker
+
+    - name: workflow
+      steps:
+        - - name: git-clone
+            template: git-clone
+        # - - name: unit-tests
+        - - name: build-and-push
+            template: build-and-push
+            args:
+              artifacts:
+                - name: source
+                  from: "{{steps.git-clone.outputs.artifacts.source}}"
+        # - - name: update-and-push-manifest
