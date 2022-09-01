@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ClusterWorkflowTemplate
+metadata:
+  name: git-clone
+spec:
+    serviceAccountName: workflow
+    templates:
+    - name: git-clone
+      inputs:
+        parameters:
+          - name: repo_url
+          - name: repo_commit_id
+            value: HEAD
+          - name: repo_ssh_secret
+          - name: repo_ssh_key
+        artifacts:
+          - name: source
+            path: /src
+            git:
+              repo: "{{inputs.parameters.repo_url}}"
+              revision: "{{inputs.parameters.repo_commit_id}}"
+              sshPrivateKeySecret:
+                name: "{{inputs.parameters.repo_ssh_secret}}"
+                key: "{{inputs.parameters.repo_ssh_key}}"
+              depth: 1
+      outputs:
+        artifacts:
+          - name: source
+            path: /src
+      container:
+        image: golang:1.10
+        command: [sh, -c]
+        args: ["ls && git status && ls"]
+        workingDir: /src
+      activeDeadlineSeconds: 60
