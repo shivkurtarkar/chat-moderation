@@ -9,6 +9,9 @@ spec:
     - name: argoregcred
       secret:
         secretName: argo-regcred
+    - name: github-access
+      secret:
+        secretName: regcred
   templates:
     - name: workflow
       steps:
@@ -43,7 +46,26 @@ spec:
                 - name: container_image
                   value: shivamkurtarkar/messaging-app
                 - name: container_tag
-                  value: latest
+                  value: "{{steps.git-clone.outputs.parameters.revision}}"
                 - name: path_to_context
                   value: /src/deployment/frontend/
-        # - - name: update-and-push-manifest
+        - - name: update-and-push-manifest
+            templateRef:
+              name: promote
+              template: promote
+              clusterScope: true
+            arguments:
+              artifacts:
+                - name: source
+                  from: "{{steps.git-clone.outputs.artifacts.source}}"
+              parameters:
+                - name: path_to_context
+                  value: deployment/frontend/manifest
+                - name: container_image
+                  value: messaging-app
+                - name: new_image_name
+                  value: shivamkurtarkar/messaging-app
+                - name: container_tag
+                  value: "{{steps.git-clone.outputs.parameters.revision}}"
+                - name: environment
+                  value: staging
