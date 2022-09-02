@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ClusterWorkflowTemplate
+metadata:
+  name: promote
+spec:
+  serviceAccountName: workflow
+  templates:
+    - name: promote
+      inputs:
+        artifacts:
+          - name: source
+            path: /src
+        parameters:
+          - name: path_to_context
+          - name: container_image
+          - name: new_image_name
+          - name: container_tag
+          - name: evironment
+      container:
+        image: vfarcic/kustomize
+        command: [sh]
+        source: |
+          set -e
+          cd {{inputs.parameters.path_to_context}}
+          kustomize edit set image {{inputs.parameters.container_image}}={{inputs.parameters.new_image_name}}:{{inputs.parameters.container_tag}}
+          git add kustomization.yaml
+          git commit -m "Updated {{inputs.parameters.container_image}} with tag {{inputs.parameters.container_tag}}"
+          git push
+        workingDir: /src/{{inputs.parameters.repo_name}}
+        volumeMounts:
+          - name: github-access
+            mountPath: /.github/
