@@ -8,4 +8,4 @@ resources:
 images:
 - name: messaging-app
   newName: shivamkurtarkar/messaging-app
-  newTag: 22eba1d53b4dc5ddb7b7dad2100d43fb882de316
+  newTag: c171364ea349cabb8f839517642ebae2ad3e460b
