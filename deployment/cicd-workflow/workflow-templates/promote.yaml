@@ -30,8 +30,8 @@ spec:
           cd {{inputs.parameters.path_to_context}}
           kustomize edit set image {{inputs.parameters.container_image}}={{inputs.parameters.new_image_name}}:{{inputs.parameters.container_tag}}
           echo "Updated {{inputs.parameters.container_image}} with tag {{inputs.parameters.container_tag}}"
-          git config --global user.email "{{owner_email}}"
-          git config --global user.name "{{owner_name}}"
+          git config --global user.email "{{inputs.parameters.owner_email}}"
+          git config --global user.name "{{inputs.parameters.owner_name}}"
           git add kustomization.yaml
           git commit -m "Updated {{inputs.parameters.container_image}} with tag {{inputs.parameters.container_tag}}"
           git push
