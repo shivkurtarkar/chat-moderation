@@ -15,18 +15,27 @@ spec:
           - name: container_image
           - name: new_image_name
           - name: container_tag
-          - name: evironment
-      container:
-        image: vfarcic/kustomize
+          - name: environment
+          - name: owner_name
+          - name: owner_email
+      script:
+        image: shivamkurtarkar/kustomize
         command: [sh]
         source: |
           set -e
+          ssh-keyscan -t rsa github.com >> /root/.ssh/known_hosts
+          echo "IdentityFile /.github/ssh-private-key" >> /root/.ssh/config
+          eval $(ssh-agent) 
+          cat /.github/ssh-private-key | ssh-add - 
           cd {{inputs.parameters.path_to_context}}
           kustomize edit set image {{inputs.parameters.container_image}}={{inputs.parameters.new_image_name}}:{{inputs.parameters.container_tag}}
+          echo "Updated {{inputs.parameters.container_image}} with tag {{inputs.parameters.container_tag}}"
+          git config --global user.email "{{owner_email}}"
+          git config --global user.name "{{owner_name}}"
           git add kustomization.yaml
           git commit -m "Updated {{inputs.parameters.container_image}} with tag {{inputs.parameters.container_tag}}"
           git push
-        workingDir: /src/{{inputs.parameters.repo_name}}
+        workingDir: /src
         volumeMounts:
           - name: github-access
             mountPath: /.github/
