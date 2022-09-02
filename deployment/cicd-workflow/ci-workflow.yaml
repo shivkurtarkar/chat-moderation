@@ -11,7 +11,8 @@ spec:
         secretName: argo-regcred
     - name: github-access
       secret:
-        secretName: regcred
+        secretName: github-creds
+        defaultMode: 0400
   templates:
     - name: workflow
       steps:
@@ -69,3 +70,7 @@ spec:
                   value: "{{steps.git-clone.outputs.parameters.revision}}"
                 - name: environment
                   value: staging
+                - name: owner_name
+                  value: shivam
+                - name: owner_email
+                  value: shiv.kurtarkar@gmail.com
