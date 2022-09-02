@@ -3,8 +3,8 @@ kind: ClusterWorkflowTemplate
 metadata:
   name: git-clone
 spec:
-    serviceAccountName: workflow
-    templates:
+  serviceAccountName: workflow
+  templates:
     - name: git-clone
       inputs:
         parameters:
@@ -27,9 +27,14 @@ spec:
         artifacts:
           - name: source
             path: /src
+        parameters:
+          - name: revision
+            valueFrom:
+              # default: "" # Default value to use if retrieving valueFrom fails.
+              path: /tmp/git_revision
       container:
         image: golang:1.10
         command: [sh, -c]
-        args: ["ls && git status && ls"]
+        args: ["git status && ls && git log -1 --format=%H > /tmp/git_revision"]
         workingDir: /src
       activeDeadlineSeconds: 60
