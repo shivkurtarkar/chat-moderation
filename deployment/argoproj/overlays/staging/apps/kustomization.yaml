@@ -6,7 +6,7 @@ resources:
   - ns.yaml
 namePrefix: staging-
 
-namespace: staging-chat-moderation
+namespace: argocd
 
 patches:
   - patch: |-
