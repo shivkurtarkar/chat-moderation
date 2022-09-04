@@ -20,10 +20,10 @@ interaction and collabration. Thus benifiting whole community.
 <br>
 
 ## Tech stack
-- Deployment platform: kubernetes, kserve
+- Deployment platform: kubernetes, 
 - Experiment tracking: MLFLOW
 - Workflow orchestration: argo workflow
-- CI/CD: github, argo
+- CI/CD: github, argo workflow, argo cd
 - Monitoring: prometheus + graphana
 
 
@@ -44,10 +44,49 @@ kubectl wait --namespace ingress-nginx   --for=condition=ready pod   --selector=
 ```
 kubectl apply -k  deployment/argo-cd/overlays/production/ 
 ```
-
+access it from https://argo-cd.127.0.0.1.nip.io
 ## setup argo-workflow
+```
+kubectl apply -k  deployment/argo_workflow/overlays/production/
+```
+access it from https://argo-wf.127.0.0.1.nip.io
 ## setup argo-events
-## setup setup workflows
+## setup workflows
+
+```
+export KUBE_EDITOR="/usr/bin/nano"
+kubectl edit configmap workflow-controller-configmap -n argo # assumes argo was installed in the argo namespace
+---
+data:
+  artifactRepository: |
+    s3:
+      bucket: argobucket      
+      endpoint: minio:9000            #AWS => s3.amazonaws.com; GCS => storage.googleapis.com
+      insecure: true                  #omit for S3/GCS. Needed when minio runs without TLS
+      accessKeySecret:                #omit if accessing via AWS IAM
+        name: my-minio-cred
+        key: accesskey
+      secretKeySecret:                #omit if accessing via AWS IAM
+        name: my-minio-cred
+        key: secretkey
+      useSDKCreds: true               #tells argo to use AWS SDK's default provider chain, enable for things like IRSA support
+
+
+
+data:                                                            
+  artifactRepository: |
+   s3:
+     endpoint: minio:9000
+     bucket: argobucket
+     insecure: true
+     accessKeySecret:
+       name: my-minio-cred
+       key: accesskey
+     secretKeySecret:  
+       name: my-minio-cred   
+       key: secretkey  
+     useSDKCreds: true   
+```
 
 ## run workflow
 
