@@ -20,10 +20,10 @@ interaction and collabration. Thus benifiting whole community.
 <br>
 
 ## Tech stack
-- Deployment platform: kubernetes, kserve
+- Deployment platform: kubernetes, 
 - Experiment tracking: MLFLOW
 - Workflow orchestration: argo workflow
-- CI/CD: github, argo
+- CI/CD: github, argo workflow, argo cd
 - Monitoring: prometheus + graphana
 
 
