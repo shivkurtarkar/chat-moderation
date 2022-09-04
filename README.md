@@ -25,3 +25,30 @@ interaction and collabration. Thus benifiting whole community.
 - Workflow orchestration: argo workflow
 - CI/CD: github, argo
 - Monitoring: prometheus + graphana
+
+
+# Getting Started
+
+## Create kind cluster
+```
+kind create cluster --config kind.config
+```
+
+## setup nginx Ingress
+```
+kubectl apply --filename https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
+kubectl wait --namespace ingress-nginx   --for=condition=ready pod   --selector=app.kubernetes.io/component=controller   --timeout=90s
+```
+
+## setup argo-cd
+```
+kubectl apply -k  deployment/argo-cd/overlays/production/ 
+```
+
+## setup argo-workflow
+## setup argo-events
+## setup setup workflows
+
+## run workflow
+
+## deploy appliation
