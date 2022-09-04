@@ -13,6 +13,3 @@ spec:
     repoURL: "git@github.com:shivkurtarkar/chat-moderation.git"
     targetRevision: master
   project: default
-syncPolicy:
-  syncOptions:
-    - CreateNamespace=true

@@ -13,6 +13,3 @@ spec:
     targetRevision: master
     path: deployment/prediction_service/manifest/
   project: default
-syncPolicy:
-  syncOptions:
-    - CreateNamespace=true
