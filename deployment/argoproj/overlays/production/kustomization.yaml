@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+namePrefix: production-
+
+patches:
+  - patch: |-
+      - op: replace
+        path: "/spec/source/path"                
+        value: "deployment/argoproj/overlays/production/apps"
+    target:
+      kind: Application
+      name: chat-moderation-root
