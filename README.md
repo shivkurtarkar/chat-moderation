@@ -51,7 +51,7 @@ kubectl apply -k  deployment/argo_workflow/overlays/production/
 ```
 access it from https://argo-wf.127.0.0.1.nip.io
 ## setup argo-events
-## setup setup workflows
+## setup workflows
 
 ## run workflow
 

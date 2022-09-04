@@ -3,5 +3,5 @@ kind: Kustomization
 resources:
   - https://raw.githubusercontent.com/argoproj/argo-workflows/stable/manifests/install.yaml
   - namespace.yaml
-  # - templates.yaml
+  - wf-templates
 namespace: argo
