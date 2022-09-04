@@ -6,3 +6,9 @@ resources:
 namePrefix: production-
 
 namespace: production-chat-moderation
+
+configMapGenerator:
+  - name: messaging-config
+    behavior: merge
+    files:
+      - config.ini=config.prod
