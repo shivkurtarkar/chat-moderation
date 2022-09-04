@@ -1,14 +1,15 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: messaging-app
+  name: ml-text-classification
+  namespace: argocd
 spec:
   destination:
     name: ""
     namespace: chat-moderation
     server: "https://kubernetes.default.svc"
   source:
-    path: deployment/frontend/manifest/
-    repoURL: "git@github.com:shivkurtarkar/chat-moderation.git"
-    targetRevision: HEAD
+    repoURL: git@github.com:shivkurtarkar/chat-moderation.git
+    targetRevision: master
+    path: deployment/prediction_service/manifest/
   project: default
