@@ -53,6 +53,41 @@ access it from https://argo-wf.127.0.0.1.nip.io
 ## setup argo-events
 ## setup workflows
 
+```
+export KUBE_EDITOR="/usr/bin/nano"
+kubectl edit configmap workflow-controller-configmap -n argo # assumes argo was installed in the argo namespace
+---
+data:
+  artifactRepository: |
+    s3:
+      bucket: argobucket      
+      endpoint: minio:9000            #AWS => s3.amazonaws.com; GCS => storage.googleapis.com
+      insecure: true                  #omit for S3/GCS. Needed when minio runs without TLS
+      accessKeySecret:                #omit if accessing via AWS IAM
+        name: my-minio-cred
+        key: accesskey
+      secretKeySecret:                #omit if accessing via AWS IAM
+        name: my-minio-cred
+        key: secretkey
+      useSDKCreds: true               #tells argo to use AWS SDK's default provider chain, enable for things like IRSA support
+
+
+
+data:                                                            
+  artifactRepository: |
+   s3:
+     endpoint: minio:9000
+     bucket: argobucket
+     insecure: true
+     accessKeySecret:
+       name: my-minio-cred
+       key: accesskey
+     secretKeySecret:  
+       name: my-minio-cred   
+       key: secretkey  
+     useSDKCreds: true   
+```
+
 ## run workflow
 
 ## deploy appliation

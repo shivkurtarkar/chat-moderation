@@ -4,4 +4,7 @@ resources:
   - ../../base
   - ../workflows
   - ingress.yaml
-# - regcred.yaml
+  # - regcred.yaml
+
+patchesStrategicMerge:
+  - patch/workflow-controller-configmap.yaml

@@ -1,48 +1,14 @@
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: workflow
-
----
-
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: workflow
+  creationTimestamp: null
+  name: default-admin
+  namespace: argo
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: workflows
+  kind: ClusterRole
+  name: admin
 subjects:
-- kind: ServiceAccount
-  name: workflow
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: Role
-metadata:
-  name: workflows
-rules:
-- apiGroups:
-  - ""
-  resources:
-  - pods
-  verbs:
-  - get
-  - watch
-  - patch
-- apiGroups:
-  - ""
-  resources:
-  - pods/log
-  verbs:
-  - get
-  - watch
-- apiGroups:
-  - argoproj.io
-  resources:
-  - workflows
-  verbs:
-  - create
-  - get
+  - kind: ServiceAccount
+    name: default
+    namespace: argo

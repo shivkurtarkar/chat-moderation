@@ -19,16 +19,33 @@ kubectl -n argo create rolebinding default-admin --clusterrole=admin --serviceac
 
 
 kubectl apply -f argo_workflow_ingress.yaml -n argo
-
+kubectl patch svc argo-server -n argo -p '{"spec": {"type": "LoadBalancer"}}'
 
 SECRET=$(kubectl get sa argo-server -o=jsonpath='{.secrets[0].name}' -n argo) 
 ARGO_TOKEN="Bearer $(kubectl get secret $SECRET -o=jsonpath='{.data.token}' -n argo | base64 --decode)"
-$echo $ARGO_TOKEN
-$curl https://localhost:2746/api/v1/workflows/argo -H "Authorization: $ARGO_TOKEN"
+echo $ARGO_TOKEN
+curl https://localhost:2746/api/v1/workflows/argo -H "Authorization: $ARGO_TOKEN"
 
 refrence
 https://towardsdatascience.com/creating-containerized-workflows-with-argo-ec1011b04370
 
+
+export KUBE_EDITOR="/usr/bin/nano"
+kubectl edit configmap workflow-controller-configmap -n argo # assumes argo was installed in the argo namespace
+---
+data:
+  artifactRepository: |
+    s3:
+      bucket: argobucket      
+      endpoint: minio:9000            #AWS => s3.amazonaws.com; GCS => storage.googleapis.com
+      insecure: true                  #omit for S3/GCS. Needed when minio runs without TLS
+      accessKeySecret:                #omit if accessing via AWS IAM
+        name: my-minio-cred
+        key: accesskey
+      secretKeySecret:                #omit if accessing via AWS IAM
+        name: my-minio-cred
+        key: secretkey
+      useSDKCreds: true               #tells argo to use AWS SDK's default provider chain, enable for things like IRSA support
 
 ## ARGOCD 
 ### install argocd
