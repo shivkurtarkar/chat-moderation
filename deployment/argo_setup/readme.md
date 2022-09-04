@@ -4,10 +4,10 @@ kind create cluster --config kind.config
 kubectl apply --filename https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 kubectl wait --namespace ingress-nginx   --for=condition=ready pod   --selector=app.kubernetes.io/component=controller   --timeout=90s
 
-kubectl run hello   --expose   --image nginxdemos/hello:plain-text   --port 80
+<!-- kubectl run hello   --expose   --image nginxdemos/hello:plain-text   --port 80
 nano ingress.yaml
 kubectl create -f ingress.yaml 
-docker run   --add-host hello.dustinspecker.com:172.18.0.2   --net kind   --rm   curlimages/curl:7.71.0
+docker run   --add-host hello.dustinspecker.com:172.18.0.2   --net kind   --rm   curlimages/curl:7.71.0 -->
 
 
 ## argo setup
