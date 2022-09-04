@@ -44,11 +44,12 @@ kubectl wait --namespace ingress-nginx   --for=condition=ready pod   --selector=
 ```
 kubectl apply -k  deployment/argo-cd/overlays/production/ 
 ```
-
+access it from https://argo-cd.127.0.0.1.nip.io
 ## setup argo-workflow
 ```
 kubectl apply -k  deployment/argo_workflow/overlays/production/
 ```
+access it from https://argo-wf.127.0.0.1.nip.io
 ## setup argo-events
 ## setup setup workflows
 
