@@ -46,6 +46,9 @@ kubectl apply -k  deployment/argo-cd/overlays/production/
 ```
 
 ## setup argo-workflow
+```
+kubectl apply -k  deployment/argo_workflow/overlays/production/
+```
 ## setup argo-events
 ## setup setup workflows
 
