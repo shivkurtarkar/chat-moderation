@@ -11,4 +11,4 @@ configMapGenerator:
   - name: messaging-config
     behavior: merge
     files:
-      - config.ini
+      - config.ini=config.staging
