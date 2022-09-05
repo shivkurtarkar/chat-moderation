@@ -31,7 +31,7 @@ spec:
                   value: github-creds
                 - name: repo_ssh_key
                   value: ssh-private-key
-        # - - name: unit-tests
+        # - - name: run-unit-tests
         - - name: build-and-push
             templateRef:
               name: container-image
@@ -47,10 +47,10 @@ spec:
                 - name: container_image
                   value: shivamkurtarkar/messaging-app
                 - name: container_tag
-                  value: "{{steps.git-clone.outputs.parameters.revision}}"
+                  value: "stag-{{steps.git-clone.outputs.parameters.revision}}"
                 - name: path_to_context
                   value: /src/deployment/frontend/
-        - - name: update-and-push-manifest
+        - - name: update-and-push-manifest-staging
             templateRef:
               name: promote
               template: promote
@@ -67,9 +67,58 @@ spec:
                 - name: new_image_name
                   value: shivamkurtarkar/messaging-app
                 - name: container_tag
-                  value: "{{steps.git-clone.outputs.parameters.revision}}"
+                  value: "stag-{{steps.git-clone.outputs.parameters.revision}}"
                 - name: environment
                   value: staging
+                - name: owner_name
+                  value: shivam
+                - name: owner_email
+                  value: shiv.kurtarkar@gmail.com
+        # - - name: wait-for-deployment
+        # - - name: run-integration-test
+        - - name: approve-for-production
+            templateRef:
+              name: suspend-templates
+              template: approve
+              clusterScope: true
+        - - name: retag-and-push-image
+            templateRef:
+              name: container-image
+              template: build-kaniko-git
+              clusterScope: true
+            arguments:
+              artifacts:
+                - name: source
+                  from: "{{steps.git-clone.outputs.artifacts.source}}"
+              parameters:
+                - name: path_to_docker
+                  value: Dockerfile
+                - name: container_image
+                  value: shivamkurtarkar/messaging-app
+                - name: container_tag
+                  value: "prod-{{steps.git-clone.outputs.parameters.revision}}"
+                - name: path_to_context
+                  value: /src/deployment/frontend/
+        - - name: update-and-push-manifest-prod
+            templateRef:
+              name: promote
+              template: promote
+              clusterScope: true
+            arguments:
+              artifacts:
+                - name: source
+                  from: "{{steps.git-clone.outputs.artifacts.source}}"
+              parameters:
+                - name: path_to_context
+                  value: deployment/frontend/manifest/overlays/production
+                - name: container_image
+                  value: messaging-app
+                - name: new_image_name
+                  value: shivamkurtarkar/messaging-app
+                - name: container_tag
+                  value: "prod-{{steps.git-clone.outputs.parameters.revision}}"
+                - name: environment
+                  value: production
                 - name: owner_name
                   value: shivam
                 - name: owner_email
