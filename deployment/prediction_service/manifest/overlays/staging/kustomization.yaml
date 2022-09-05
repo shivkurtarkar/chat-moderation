@@ -10,3 +10,6 @@ images:
 - name: messaging-app
   newName: shivamkurtarkar/messaging-app
   newTag: 867701d0dc47bce86b08c2c7a644ed5f4e78d31b
+- name: shivamkurtarkar/text-classification
+  newName: shivamkurtarkar/text-classification
+  newTag: stag-6301abbb89bc5edb968712bef469406afe6f07f5
