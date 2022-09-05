@@ -15,4 +15,4 @@ configMapGenerator:
 images:
 - name: messaging-app
   newName: shivamkurtarkar/messaging-app
-  newTag: stag-c5535175af0f25cb309de7b482a451814b7b8e0e
+  newTag: stag-a02efe245680db703b8b3d5d3ee0eca29e8ebf59
