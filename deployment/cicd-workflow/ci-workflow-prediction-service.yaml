@@ -31,8 +31,8 @@ spec:
                   value: github-creds
                 - name: repo_ssh_key
                   value: ssh-private-key
-        # - - name: unit-tests
-        - - name: build-and-push
+        # - - name: run-unit-tests
+        - - name: build-staging
             templateRef:
               name: container-image
               template: build-kaniko-git
@@ -45,12 +45,12 @@ spec:
                 - name: path_to_docker
                   value: Dockerfile
                 - name: container_image
-                  value: shivamkurtarkar/messaging-app
+                  value: shivamkurtarkar/text-classification
                 - name: container_tag
-                  value: "{{steps.git-clone.outputs.parameters.revision}}"
+                  value: "stag-{{steps.git-clone.outputs.parameters.revision}}"
                 - name: path_to_context
                   value: /src/deployment/prediction_service/
-        - - name: update-and-push-manifest
+        - - name: release-staging
             templateRef:
               name: promote
               template: promote
@@ -63,13 +63,62 @@ spec:
                 - name: path_to_context
                   value: deployment/prediction_service/manifest/overlays/staging
                 - name: container_image
-                  value: messaging-app
+                  value: text-classification
                 - name: new_image_name
-                  value: shivamkurtarkar/messaging-app
+                  value: shivamkurtarkar/text-classification
                 - name: container_tag
-                  value: "{{steps.git-clone.outputs.parameters.revision}}"
+                  value: "stag-{{steps.git-clone.outputs.parameters.revision}}"
                 - name: environment
                   value: staging
+                - name: owner_name
+                  value: shivam
+                - name: owner_email
+                  value: shiv.kurtarkar@gmail.com
+        # - - name: wait-for-deployment
+        # - - name: run-integration-test
+        - - name: approve-production
+            templateRef:
+              name: suspend-templates
+              template: approve
+              clusterScope: true
+        - - name: build-production
+            templateRef:
+              name: container-image
+              template: build-kaniko-git
+              clusterScope: true
+            arguments:
+              artifacts:
+                - name: source
+                  from: "{{steps.release-staging.outputs.artifacts.source}}"
+              parameters:
+                - name: path_to_docker
+                  value: Dockerfile
+                - name: container_image
+                  value: shivamkurtarkar/text-classification
+                - name: container_tag
+                  value: "prod-{{steps.git-clone.outputs.parameters.revision}}"
+                - name: path_to_context
+                  value: /src/deployment/prediction_service/
+        - - name: release-production
+            templateRef:
+              name: promote
+              template: promote
+              clusterScope: true
+            arguments:
+              artifacts:
+                - name: source
+                  from: "{{steps.release-staging.outputs.artifacts.source}}"
+              parameters:
+                - name: path_to_context
+                  value: deployment/prediction_service/manifest/overlays/production
+                - name: container_image
+                  value: text-classification
+                - name: new_image_name
+                  value: shivamkurtarkar/text-classification
+                - name: container_tag
+                  value: "prod-{{steps.git-clone.outputs.parameters.revision}}"
+                - name: environment
+                  value: production
                 - name: owner_name
                   value: shivam
                 - name: owner_email

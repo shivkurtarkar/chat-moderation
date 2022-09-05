@@ -18,6 +18,10 @@ spec:
           - name: environment
           - name: owner_name
           - name: owner_email
+      outputs:
+        artifacts:
+          - name: source
+            path: /src
       script:
         image: shivamkurtarkar/kustomize
         command: [sh]
