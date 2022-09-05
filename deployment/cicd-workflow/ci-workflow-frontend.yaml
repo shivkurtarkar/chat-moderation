@@ -81,24 +81,19 @@ spec:
               name: suspend-templates
               template: approve
               clusterScope: true
-        - - name: build-production
+        - - name: retag-production
             templateRef:
               name: container-image
-              template: build-kaniko-git
+              template: crane-retag
               clusterScope: true
             arguments:
-              artifacts:
-                - name: source
-                  from: "{{steps.release-staging.outputs.artifacts.source}}"
               parameters:
-                - name: path_to_docker
-                  value: Dockerfile
                 - name: container_image
                   value: shivamkurtarkar/messaging-app
                 - name: container_tag
+                  value: "stag-{{steps.git-clone.outputs.parameters.revision}}"
+                - name: new_tag
                   value: "prod-{{steps.git-clone.outputs.parameters.revision}}"
-                - name: path_to_context
-                  value: /src/deployment/frontend/
         - - name: release-production
             templateRef:
               name: promote
