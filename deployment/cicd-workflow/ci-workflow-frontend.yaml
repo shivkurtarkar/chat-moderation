@@ -63,7 +63,7 @@ spec:
                 - name: path_to_context
                   value: deployment/frontend/manifest/overlays/staging
                 - name: container_image
-                  value: messaging-app
+                  value: shivamkurtarkar/messaging-app
                 - name: new_image_name
                   value: shivamkurtarkar/messaging-app
                 - name: container_tag
@@ -112,7 +112,7 @@ spec:
                 - name: path_to_context
                   value: deployment/frontend/manifest/overlays/production
                 - name: container_image
-                  value: messaging-app
+                  value: shivamkurtarkar/messaging-app
                 - name: new_image_name
                   value: shivamkurtarkar/messaging-app
                 - name: container_tag
