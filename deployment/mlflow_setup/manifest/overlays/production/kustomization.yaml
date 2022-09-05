@@ -3,6 +3,6 @@ kind: Kustomization
 
 resources:
   - ../workflows
-  - ingress.yaml
+  - minio-ingress.yaml
 
 namespace: mlflow
