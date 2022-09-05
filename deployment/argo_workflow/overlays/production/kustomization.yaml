@@ -4,6 +4,7 @@ resources:
   - ../../base
   - ../workflows
   - ingress.yaml
+  - minio-artifact-store-secret.yaml
   # - regcred.yaml
 
 patchesStrategicMerge:
