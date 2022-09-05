@@ -27,7 +27,7 @@ spec:
           lifecycle:
             postStart:
               exec:
-                command: [mkdir, -p, /data/mlflow]
+                command: [mkdir, -p, /data/mlflow, /data/argocd]
           readinessProbe:
             httpGet:
               path: /minio/health/ready
