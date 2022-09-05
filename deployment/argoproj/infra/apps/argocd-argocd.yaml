@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  destination:
+    name: ""
+    namespace: argocd
+    server: "https://kubernetes.default.svc"
+  source:
+    path: deployment/argo-cd/overlays/production/
+    repoURL: "git@github.com:shivkurtarkar/chat-moderation.git"
+    targetRevision: master
+  project: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

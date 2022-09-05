@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argo-workflow-resources
+  namespace: argocd
+spec:
+  destination:
+    name: ""
+    namespace: argo
+    server: "https://kubernetes.default.svc"
+  source:
+    path: deployment/cicd-workflow/workflows/
+    repoURL: "git@github.com:shivkurtarkar/chat-moderation.git"
+    targetRevision: master
+  project: default
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,8 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # - apps/argocd-argocd.yaml
+  - apps/argocd-argo-workflow.yaml
+  - apps/argocd-mlflow.yaml
+  - apps/argocd-argo-workflow-resources.yaml
