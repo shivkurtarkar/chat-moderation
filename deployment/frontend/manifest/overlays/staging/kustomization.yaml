@@ -2,13 +2,17 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../base
+- ../../base
 namePrefix: staging-
 
 namespace: staging-chat-moderation
 
 configMapGenerator:
-  - name: messaging-config
-    behavior: merge
-    files:
-      - config.ini=config.staging
+- behavior: merge
+  files:
+  - config.ini=config.staging
+  name: messaging-config
+images:
+- name: messaging-app
+  newName: shivamkurtarkar/messaging-app
+  newTag: stag-a02efe245680db703b8b3d5d3ee0eca29e8ebf59
