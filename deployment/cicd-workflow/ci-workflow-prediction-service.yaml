@@ -63,7 +63,7 @@ spec:
                 - name: path_to_context
                   value: deployment/prediction_service/manifest/overlays/staging
                 - name: container_image
-                  value: text-classification
+                  value: shivamkurtarkar/text-classification
                 - name: new_image_name
                   value: shivamkurtarkar/text-classification
                 - name: container_tag
@@ -112,7 +112,7 @@ spec:
                 - name: path_to_context
                   value: deployment/prediction_service/manifest/overlays/production
                 - name: container_image
-                  value: text-classification
+                  value: shivamkurtarkar/text-classification
                 - name: new_image_name
                   value: shivamkurtarkar/text-classification
                 - name: container_tag
