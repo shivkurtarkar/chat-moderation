@@ -28,3 +28,18 @@ spec:
         volumeMounts:
           - name: argoregcred
             mountPath: /kaniko/.docker
+    - name: crane-retag
+      inputs:
+        parameters:
+          - name: container_image
+          - name: container_tag
+          - name: new_tag
+      script:
+        image: gcr.io/go-containerregistry/crane:debug
+        command: [/busybox/sh]
+        source: |
+          set -e
+          crane tag {{inputs.parameters.container_image}}:{{inputs.parameters.container_tag}} {{inputs.parameters.new_tag}}
+        volumeMounts:
+          - name: argoregcred
+            mountPath: /root/.docker
