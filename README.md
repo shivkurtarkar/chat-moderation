@@ -44,50 +44,26 @@ kubectl wait --namespace ingress-nginx   --for=condition=ready pod   --selector=
 ```
 kubectl apply -k  deployment/argo-cd/overlays/production/ 
 ```
-access it from https://argo-cd.127.0.0.1.nip.io
+access argocd at https://argo-cd.127.0.0.1.nip.io
 ## setup argo-workflow
 ```
 kubectl apply -k  deployment/argo_workflow/overlays/production/
 ```
-access it from https://argo-wf.127.0.0.1.nip.io
-## setup argo-events
-## setup workflows
-
+## create secrets
 ```
-export KUBE_EDITOR="/usr/bin/nano"
-kubectl edit configmap workflow-controller-configmap -n argo # assumes argo was installed in the argo namespace
----
-data:
-  artifactRepository: |
-    s3:
-      bucket: argobucket      
-      endpoint: minio:9000            #AWS => s3.amazonaws.com; GCS => storage.googleapis.com
-      insecure: true                  #omit for S3/GCS. Needed when minio runs without TLS
-      accessKeySecret:                #omit if accessing via AWS IAM
-        name: my-minio-cred
-        key: accesskey
-      secretKeySecret:                #omit if accessing via AWS IAM
-        name: my-minio-cred
-        key: secretkey
-      useSDKCreds: true               #tells argo to use AWS SDK's default provider chain, enable for things like IRSA support
-
-
-
-data:                                                            
-  artifactRepository: |
-   s3:
-     endpoint: minio:9000
-     bucket: argobucket
-     insecure: true
-     accessKeySecret:
-       name: my-minio-cred
-       key: accesskey
-     secretKeySecret:  
-       name: my-minio-cred   
-       key: secretkey  
-     useSDKCreds: true   
+kubectl apply secrets-template.yaml
 ```
+access argo workflow at https://argo-wf.127.0.0.1.nip.io
 
+## setup mlflow
+```
+kubectl apply -k deployment/mlflow_setup/manifest/overlays/production/
+```
+access mlflow at https://mlflow.127.0.0.1.nip.io
+## setup workflows resources
+```
+kubectl apply -k deployment/cicd-workflow/workflows/
+```
 ## run workflow
 
 ## deploy appliation
