@@ -44,7 +44,21 @@ kubectl wait --namespace ingress-nginx   --for=condition=ready pod   --selector=
 ```
 kubectl apply -k  deployment/argo-cd/overlays/production/ 
 ```
+use http for just deployment
+or fork and use ssh credentials for full setup with pipeline and cicd
+update credentials in argocd-repo-creds.yaml 
+setup repository credentials
+```
+kubectl apply -f argocd-repo-creds.yaml 
+```
 access argocd at https://argo-cd.127.0.0.1.nip.io
+
+run following commands to create applications
+kubectl apply -k  deployment/argoproj/overlays/staging/
+kubectl apply -k  deployment/argoproj/overlays/production/
+
+to create application refer here.
+
 ## setup argo-workflow
 ```
 kubectl apply -k  deployment/argo_workflow/overlays/production/
