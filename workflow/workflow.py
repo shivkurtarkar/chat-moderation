@@ -87,10 +87,11 @@ def training_pipeline(argo_host, argo_token):
                 "experiment": "text-moderation-model"                
             }],
             variables=[
-                VariableAsEnv(name="MLFLOW_TRACKING_URI", value="http://172.18.0.2:31989/"),  # value="http://mlflow-tracking-service:5000/"), 
-                VariableAsEnv(name="MLFLOW_S3_ENDPOINT_URL", value="http://172.18.0.2:30608/"),  # value="http://minio:9000/"), 
+                VariableAsEnv(name="MLFLOW_TRACKING_URI",    value="http://mlflow-tracking-service.mlflow.svc.cluster.local:5000"),  # value="http://mlflow-tracking-service:5000/"), 
+                VariableAsEnv(name="MLFLOW_S3_ENDPOINT_URL", value="http://minio.mlflow.svc.cluster.local:9000"),  # value="http://minio:9000/"), 
                 VariableAsEnv(name="AWS_ACCESS_KEY_ID", value="admin"),
                 VariableAsEnv(name="AWS_SECRET_ACCESS_KEY", value="password"),
+                VariableAsEnv(name="MLFLOW_TRACKING_INSECURE_TLS", value="true"),
                 VariableAsEnv(name="MLFLOW_S3_IGNORE_TLS", value="true")
             ],
             input_artifacts=[InputArtifact("dataset", dataset_path, "preprocess-data", "dataset")],            
