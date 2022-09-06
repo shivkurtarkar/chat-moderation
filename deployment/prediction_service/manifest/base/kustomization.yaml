@@ -11,6 +11,6 @@ images:
     newTag: v2
 
 secretGenerator:
-  - name: model_deployment_info
+  - name: model-deployment-info
     envs:
-      - model_deployment_info.env
+      - model-deployment-info.env
