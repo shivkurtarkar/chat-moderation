@@ -33,16 +33,16 @@ print(f"MLFLOW_S3_IGNORE_TLS	: {os.getenv('MLFLOW_S3_IGNORE_TLS')} ")
 print()
 print(f"FLASK_APP	            : {os.getenv('FLASK_APP')} ")
 
-# PREFIX='mlflow-artifacts:/1'
-PREFIX='runs:'
 
 print("downloading artifacts..")
 # Load model as a PyFuncModel.
-logged_model = f'{PREFIX}/{RUN_ID}/{MODEL_ARTIFACT_PATH}'
+# logged_model = f'runs:/{RUN_ID}/{MODEL_ARTIFACT_PATH}'
+logged_model = f's3://mlflow/1/{RUN_ID}/artifacts/{MODEL_ARTIFACT_PATH}'
 print(f'logged_model: {logged_model}')
 loaded_model = mlflow.pyfunc.load_model(logged_model)
 
-logged_tokenizer = f'{PREFIX}/{RUN_ID}/{TOKENIZER_ARTIFACT_PATH}'
+# logged_tokenizer = f'runs:/{RUN_ID}/{TOKENIZER_ARTIFACT_PATH}'
+logged_tokenizer = f's3://mlflow/1/{RUN_ID}/artifacts/{TOKENIZER_ARTIFACT_PATH}'
 print(f'logged_tokenizer: {logged_tokenizer}')
 tokenizer_path = mlflow.artifacts.download_artifacts(logged_tokenizer)
 loaded_tokenizer = load_pickle(tokenizer_path)
