@@ -1,8 +1,12 @@
-export MLFLOW_TRACKING_URI		:= http://172.18.0.2:31989/
-export MLFLOW_S3_ENDPOINT_URL	:= http://172.18.0.2:30608/
-export AWS_ACCESS_KEY_ID		:= admin
-export AWS_SECRET_ACCESS_KEY	:= password
-export MLFLOW_S3_IGNORE_TLS		:= true
+export MLFLOW_TRACKING_URI		:=  https://mlflow.127.0.0.1.nip.io
+export MLFLOW_TRACKING_INSECURE_TLS := true
+export MLFLOW_S3_ENDPOINT_URL	:=	https://minio.127.0.0.1.nip.io
+export MLFLOW_S3_IGNORE_TLS		:=	true
+export AWS_ACCESS_KEY_ID		:=	admin
+export AWS_SECRET_ACCESS_KEY	:=	password
+
+export RUN_ID 		:=	7909fed65ee944eabee7de04cd1ba370
+export EXPERIMENT 	:=	text-moderation-model
 
 IMAGE_NAME:=text-classification
 IMAGE_VER:=v2
