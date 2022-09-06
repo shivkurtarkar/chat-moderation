@@ -2,17 +2,26 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- ../../base
+  - ../../base
 namePrefix: production-
 
 namespace: production-chat-moderation
 
 configMapGenerator:
-- behavior: merge
-  files:
-  - config.ini=config.prod
-  name: messaging-config
+  - behavior: merge
+    files:
+      - config.ini=config.prod
+    name: messaging-config
 images:
-- name: shivamkurtarkar/messaging-app
-  newName: shivamkurtarkar/messaging-app
-  newTag: prod-8ab30216218ae76dae22a09b8ffdcd9f12510b3b
+  - name: shivamkurtarkar/messaging-app
+    newName: shivamkurtarkar/messaging-app
+    newTag: prod-8ab30216218ae76dae22a09b8ffdcd9f12510b3b
+
+patches:
+  - patch: |-
+      - op: replace
+        path: "/spec/rules/0/host"                
+        value: "prod.app.127.0.0.1.nip.io"
+    target:
+      kind: Ingress
+      name: messaging-app-ingress

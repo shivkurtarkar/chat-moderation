@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - service.yaml
   - deployment.yaml
+  - ingress.yaml
 # - messaging-config-map.yaml
 configMapGenerator:
   - name: messaging-config
