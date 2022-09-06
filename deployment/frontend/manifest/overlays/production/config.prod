@@ -5,4 +5,4 @@ MODERATED_MESSAGE =## MESSAGE MODERATED ##
 
 [moderation_service]
 ENDPOINT=http://production-text-classification-svc/predict
-THRESHOLD=0.4213
+THRESHOLD=0.52
