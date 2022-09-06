@@ -6,3 +6,9 @@ resources:
 namePrefix: production-
 
 namespace: production-chat-moderation
+
+secretGenerator:
+  - name: model_deployment_info
+    behavior: merge
+    envs:
+      - model_deployment_info.env

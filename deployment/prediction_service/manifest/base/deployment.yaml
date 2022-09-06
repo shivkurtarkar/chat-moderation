@@ -28,6 +28,16 @@ spec:
               value: "password"
             - name: MLFLOW_S3_IGNORE_TLS
               value: "true"
+            - name: EXPERIMENT
+              valueFrom:
+                secretKeyRef:
+                  name: model_deployment_info
+                  key: EXPERIMENT
+            - name: RUN_ID
+              valueFrom:
+                secretKeyRef:
+                  name: model_deployment_info
+                  key: RUN_ID
           resources: {}
           #  limits:
           #     memory: "128Mi"
