@@ -8,7 +8,7 @@ namePrefix: production-
 namespace: production-chat-moderation
 
 secretGenerator:
-  - name: model_deployment_info
+  - name: model-deployment-info
     behavior: merge
     envs:
       - model_deployment_info.env
