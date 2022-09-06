@@ -15,4 +15,4 @@ secretGenerator:
   - name: model-deployment-info
     behavior: merge
     envs:
-      - model_deployment_info.env
+      - model-deployment-info.env
