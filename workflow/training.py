@@ -109,7 +109,7 @@ if __name__ == '__main__':
     MLFLOW_TRACKING_URI = 'http://172.18.0.2:31989'
     # MLFLOW_TRACKING_URI ='http://0.0.0.0:5000'
     EXPERIMENT = 'text-moderation-model'
-    run(args.data_path, args.dataset, EXPERIMENT, MLFLOW_TRACKING_URI)
+    run(args.data_path, args.dataset, EXPERIMENT)
     
     # print('evaluating ... ')
     # scores = model_evalute(model, X_test_embedding, y_test)
