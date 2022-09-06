@@ -12,3 +12,12 @@ configMapGenerator:
     behavior: merge
     files:
       - config.ini=config.prod
+
+patches:
+  - patch: |-
+      - op: replace
+        path: "/spec/rules/0/host"                
+        value: "prod.app.127.0.0.1.nip.io"
+    target:
+      kind: Ingress
+      name: messaging-app-ingress
