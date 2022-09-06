@@ -79,5 +79,10 @@ access mlflow at https://mlflow.127.0.0.1.nip.io
 kubectl apply -k deployment/cicd-workflow/workflows/
 ```
 ## run workflow
+cd workflow
+python -m pipenv install
+python -m pipenv shell
+kubectl -n argo  create secret generic kagglekeys --from-file=kaggle.json 
+$make argo_workflow
 
 ## deploy appliation

@@ -1,8 +1,19 @@
-export MLFLOW_TRACKING_URI		:=  http://172.18.0.2:31989/
-export MLFLOW_S3_ENDPOINT_URL	:=	http://172.18.0.2:30608/
+export MLFLOW_TRACKING_URI		:=  https://mlflow.127.0.0.1.nip.io
+export MLFLOW_S3_ENDPOINT_URL	:=	https://minio.127.0.0.1.nip.io
+export MLFLOW_TRACKING_INSECURE_TLS := true
+# export MLFLOW_TRACKING_URI		:=  mlflow-tracking-service:5000
+# export MLFLOW_S3_ENDPOINT_URL	:=	minio:9000
 export AWS_ACCESS_KEY_ID		:=	admin
 export AWS_SECRET_ACCESS_KEY	:=	password
 export MLFLOW_S3_IGNORE_TLS		:=	true
+
+export ARGO_HOST   := https://argo-wf.127.0.0.1.nip.io
+# export ARGO_HOST   := https://argo-wf.127.0.0.1.nip.io/api/v1/workflows/argo
+# export ARGO_HOST   := https://172.18.0.2:30923
+
+export SECRET := $(shell kubectl get sa argo-server -o=jsonpath='{.secrets[0].name}' -n argo) 	
+export ARGO_TOKEN := $(shell kubectl get secret ${SECRET} -o=jsonpath='{.data.token}' -n argo | base64 --decode)
+# export ARGO_TOKEN := "Bearer ${ARGO_TOKEN}"
 
 RUN_ID := 316eae0f743b4692a9bcb5149e77407d
 
@@ -25,10 +36,7 @@ evaluate_model:
 	python evaluate.py --dataset reddit --run_id ${RUN_ID}
 
 
-ARGO_HOST   := https://172.18.0.2:31784
-ARGO_TOKEN  := eyJhbGciOiJSUzI1NiIsImtpZCI6ImhrVVhIeUZYc190a3lFLWpQTDlVMnFUZUV3UlhnV1NqZHZ2bEVBTTdKWFEifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJhcmdvIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImFyZ28tc2VydmVyLXRva2VuLWQ0NHJiIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFyZ28tc2VydmVyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQudWlkIjoiODRlNDhmZjAtN2JhNS00MjYyLThjMDQtYTFiYjk1NzQ0NTczIiwic3ViIjoic3lzdGVtOnNlcnZpY2VhY2NvdW50OmFyZ286YXJnby1zZXJ2ZXIifQ.ZsPasuh5VTQ4ASpd_oQTRVKXkN43Ic8xYI_CO-TPcl2Tyarp_OZU7pQuEbukdHSj5KbUz9SbSTCiQBEzzJsnKJvRUjmJsm3MwhvAsc7IHaZ9kLp8MRHpcgz8EjIzB0DX0hnOUM8ZsG9jqOBbH5FhH6RxGiTE8dOr7H1eahkO0JDu9XOhDT1zT7VMt31gzBaRSlAqSIIVXVCU7Kd9w1fBoc7Ar-I2Dpa54IpdJNrUseXA1563Gm9blJYx-zM_ZV1F_n-eULcDKltz3PSZYlAFm_sSVjvc0gL4m1EYoy4NgTm_FJBXWJy4pFcYMGM5zNols4-bhcZ3TAmi6lkjuL8ZBQ
-
-argo_workflow:
+argo_workflow:	
 	python workflow.py --argo_host ${ARGO_HOST}	 --argo_token ${ARGO_TOKEN}
 
 build:
