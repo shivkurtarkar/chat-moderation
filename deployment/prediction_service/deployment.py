@@ -5,35 +5,45 @@ import pickle
 import os
 
 import mlflow
-from mlflow.tracking import MlflowClient
-from mlflow.entities import ViewType
+# from mlflow.tracking import MlflowClient
+# from mlflow.entities import ViewType
 
 
 def load_pickle(filename):
     with open(filename, 'rb') as handle:
         return pickle.load(handle)
 
+RUN_ID=os.getenv('RUN_ID')
+EXPERIMENT=os.getenv('EXPERIMENT')
 
-RUN_ID = 'b8e9ea01b9404d6c98ed541a97d21607'
-EXPERIMENT = 'text-moderation-model'
-# TOKENIZER_PATH = '../../workflow/output/tokenizer.pkl'
+MODEL_ARTIFACT_PATH='model'
+TOKENIZER_ARTIFACT_PATH='preprocess/tokenizer/tokenizer.pkl'
 
 print("env---")
+print(f"model_path              : {MODEL_ARTIFACT_PATH}")
+print(f"tokenizer_path          : {TOKENIZER_ARTIFACT_PATH}")
+print(f"RUN_ID		            : {RUN_ID} ")
+print(f"EXPERIMENT	            : {EXPERIMENT} ")
+print()
 print(f"MLFLOW_TRACKING_URI		: {os.getenv('MLFLOW_TRACKING_URI')} ")
 print(f"MLFLOW_S3_ENDPOINT_URL	: {os.getenv('MLFLOW_S3_ENDPOINT_URL')} ")
 print(f"AWS_ACCESS_KEY_ID		: {os.getenv('AWS_ACCESS_KEY_ID')} ")
 print(f"AWS_SECRET_ACCESS_KEY	: {os.getenv('AWS_SECRET_ACCESS_KEY')} ")
 print(f"MLFLOW_S3_IGNORE_TLS	: {os.getenv('MLFLOW_S3_IGNORE_TLS')} ")
 print()
-print(f"FLASK_APP	: {os.getenv('FLASK_APP')} ")
+print(f"FLASK_APP	            : {os.getenv('FLASK_APP')} ")
 
 
 print("downloading artifacts..")
 # Load model as a PyFuncModel.
-logged_model = f'runs:/{RUN_ID}/model'
+# logged_model = f'runs:/{RUN_ID}/{MODEL_ARTIFACT_PATH}'
+logged_model = f's3://mlflow/1/{RUN_ID}/artifacts/{MODEL_ARTIFACT_PATH}'
+print(f'logged_model: {logged_model}')
 loaded_model = mlflow.pyfunc.load_model(logged_model)
 
-logged_tokenizer = f'runs:/{RUN_ID}/preprocess/tokenizer/tokenizer.pkl'
+# logged_tokenizer = f'runs:/{RUN_ID}/{TOKENIZER_ARTIFACT_PATH}'
+logged_tokenizer = f's3://mlflow/1/{RUN_ID}/artifacts/{TOKENIZER_ARTIFACT_PATH}'
+print(f'logged_tokenizer: {logged_tokenizer}')
 tokenizer_path = mlflow.artifacts.download_artifacts(logged_tokenizer)
 loaded_tokenizer = load_pickle(tokenizer_path)
 

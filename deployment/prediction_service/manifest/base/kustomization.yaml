@@ -9,3 +9,8 @@ images:
   - name: text-classification
     newName: shivamkurtarkar/text-classification
     newTag: v2
+
+secretGenerator:
+  - name: model_deployment_info
+    envs:
+      - model_deployment_info.env

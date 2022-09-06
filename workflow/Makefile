@@ -1,11 +1,9 @@
 export MLFLOW_TRACKING_URI		:=  https://mlflow.127.0.0.1.nip.io
-export MLFLOW_S3_ENDPOINT_URL	:=	https://minio.127.0.0.1.nip.io
 export MLFLOW_TRACKING_INSECURE_TLS := true
-# export MLFLOW_TRACKING_URI		:=  mlflow-tracking-service:5000
-# export MLFLOW_S3_ENDPOINT_URL	:=	minio:9000
+export MLFLOW_S3_ENDPOINT_URL	:=	https://minio.127.0.0.1.nip.io
+export MLFLOW_S3_IGNORE_TLS		:=	true
 export AWS_ACCESS_KEY_ID		:=	admin
 export AWS_SECRET_ACCESS_KEY	:=	password
-export MLFLOW_S3_IGNORE_TLS		:=	true
 
 export ARGO_HOST   := https://argo-wf.127.0.0.1.nip.io
 # export ARGO_HOST   := https://argo-wf.127.0.0.1.nip.io/api/v1/workflows/argo
