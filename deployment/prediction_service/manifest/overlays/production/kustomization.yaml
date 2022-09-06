@@ -12,7 +12,7 @@ images:
     newTag: prod-6301abbb89bc5edb968712bef469406afe6f07f5
 
 secretGenerator:
-  - name: model_deployment_info
+  - name: model-deployment-info
     behavior: merge
     envs:
       - model_deployment_info.env
