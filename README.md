@@ -86,3 +86,20 @@ kubectl -n argo  create secret generic kagglekeys --from-file=kaggle.json
 $make argo_workflow
 
 ## deploy appliation
+
+to change repo url
+find ./ -type f -exec sed -i -e 's+git@github.com:shivkurtarkar/chat-moderation.git+forkedrepo_name+g' {} \;
+to change docker repository name
+find ./ -type f -exec sed -i -e 's+shivamkurtarkar+dockerhub_accout_name+g' {} \;
+
+
+cat ~/.docker/config.json | base64 -w0   
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registrypullsecret
+data:
+  .dockerconfigjson: <base-64-encoded-json-here>
+type: kubernetes.io/dockerconfigjson
+```
