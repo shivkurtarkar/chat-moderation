@@ -6,6 +6,7 @@ import petname
 import configparser
 import requests
 import logging
+import uuid
 
 logging.basicConfig(
     format='%(asctime)s %(levelname)s %(message)s',
@@ -23,10 +24,13 @@ MODERATED_MESSAGE   = config['app'].get('MODERATED_MESSAGE')
 PREDICTION_SERVICE_URL = config['moderation_service'].get('ENDPOINT')
 PREDICTION_SERVICE_THRESHOLD = config['moderation_service'].getfloat('THRESHOLD')
 
-def message_moderated(message):    
+def message_moderated(message, message_id):    
     should_moderate = False
     message = {
-        'body': message
+        'Records':[{
+            'body': message,
+            'message_id': message_id
+        },]
     }
     url = PREDICTION_SERVICE_URL
     print(f'URL: {url}')
@@ -91,7 +95,8 @@ class MessagingPage:
         input_ = input_.strip()
         with self.placeholder.container():
             if input_ :
-                new_message_text = MODERATED_MESSAGE if message_moderated(input_) else input_
+                message_id = str(uuid.uuid4())
+                new_message_text = MODERATED_MESSAGE if message_moderated(input_, message_id) else input_
                 message_ = {
                     "message": new_message_text,
                     "is_user": True,
