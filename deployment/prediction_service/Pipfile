@@ -10,6 +10,7 @@ tensorflow = "*"
 boto3 = "*"
 
 [dev-packages]
+pre-commit = "*"
 
 [requires]
 python_version = "3.10"
