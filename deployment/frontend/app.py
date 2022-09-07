@@ -31,10 +31,11 @@ def message_moderated(message):
     url = PREDICTION_SERVICE_URL
     print(f'URL: {url}')
     try:
-        response = requests.post(url, json=message)
+        response = requests.post(url, json=message)        
         data = response.json()
         print(data)
-        should_moderate =  data['score'][0] > PREDICTION_SERVICE_THRESHOLD
+        prediction = data['predictions'][0]
+        should_moderate =  prediction['prediction']['moderate_message'] > PREDICTION_SERVICE_THRESHOLD
     except Exception as e:
         logger.error('error occured', e)
     return should_moderate
