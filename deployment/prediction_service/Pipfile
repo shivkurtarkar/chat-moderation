@@ -12,6 +12,12 @@ boto3 = "*"
 [dev-packages]
 pre-commit = "*"
 pytest = "*"
+pylint = "*"
+requests = "*"
+deepdiff = "*"
+black = "*"
+isort = "*"
+pytest-env = "*"
 
 [requires]
 python_version = "3.10"
