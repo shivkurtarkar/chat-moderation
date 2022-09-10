@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../../base/apps
-  # - ns.yaml
+  - ns.yaml
 namePrefix: production-
 
 namespace: argocd
@@ -11,20 +11,20 @@ namespace: argocd
 patches:
   - patch: |-
       - op: replace
-        path: "/spec/source/path"                
+        path: "/spec/source/path"
         value: "deployment/frontend/manifest/overlays/production"
       - op: replace
-        path: "/spec/destination/namespace"                
+        path: "/spec/destination/namespace"
         value: "production-chat-moderation"
     target:
       kind: Application
       name: messaging-app
   - patch: |-
       - op: replace
-        path: "/spec/source/path"                
+        path: "/spec/source/path"
         value: "deployment/prediction_service/manifest/overlays/production"
       - op: replace
-        path: "/spec/destination/namespace"                
+        path: "/spec/destination/namespace"
         value: "production-chat-moderation"
     target:
       kind: Application
