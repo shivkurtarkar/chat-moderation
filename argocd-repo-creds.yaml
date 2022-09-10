@@ -1,31 +1,30 @@
 # ---
-# # Repository credentials, for using the same credentials in multiple repositories.
-# apiVersion: v1
-# kind: Secret
-# metadata:
-#   name: chat-moderation-https-creds
-#   namespace: argocd
-#   labels:
-#    argocd.argoproj.io/secret-type: repository
-# stringData:
-#   url: https://github.com/shivkurtarkar/chat-moderation.git
-#   type: git
-#   password: my-password
-#   username: my-username
----
+# Repository credentials, for using the same credentials in multiple repositories.
 apiVersion: v1
 kind: Secret
 metadata:
-  name: chat-moderation
+  name: chat-moderation-https-creds
   namespace: argocd
   labels:
     argocd.argoproj.io/secret-type: repository
 stringData:
-  url: git@github.com:shivkurtarkar/chat-moderation.git
+  url: https://github.com/shivkurtarkar/chat-moderation.git
   type: git
-  sshPrivateKey: |
-    -----BEGIN OPENSSH PRIVATE KEY-----
-    ...
-    -----END OPENSSH PRIVATE KEY-----
----
-
+#   password: my-password
+#   username: my-username
+# ---
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: chat-moderation
+#   namespace: argocd
+#   labels:
+#     argocd.argoproj.io/secret-type: repository
+# stringData:
+#   url: git@github.com:shivkurtarkar/chat-moderation.git
+#   type: git
+#   sshPrivateKey: |
+#     -----BEGIN OPENSSH PRIVATE KEY-----
+#     ...
+#     -----END OPENSSH PRIVATE KEY-----
+# ---

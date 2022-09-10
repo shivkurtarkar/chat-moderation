@@ -13,6 +13,9 @@ patches:
         path: "/spec/source/path"
         value: "deployment/frontend/manifest/overlays/standalone"
       - op: replace
+        path: "/spec/source/repoURL"
+        value: "https://github.com/shivkurtarkar/chat-moderation.git"
+      - op: replace
         path: "/spec/destination/namespace"
         value: "standalone-chat-moderation"
     target:
@@ -22,6 +25,9 @@ patches:
       - op: replace
         path: "/spec/source/path"
         value: "deployment/prediction_service/manifest/overlays/standalone"
+      - op: replace
+        path: "/spec/source/repoURL"
+        value: "https://github.com/shivkurtarkar/chat-moderation.git"
       - op: replace
         path: "/spec/destination/namespace"
         value: "standalone-chat-moderation"
