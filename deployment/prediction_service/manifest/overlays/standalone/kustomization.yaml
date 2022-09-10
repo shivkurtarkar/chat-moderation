@@ -8,8 +8,8 @@ namePrefix: standalone-
 namespace: standalone-chat-moderation
 images:
   - name: shivamkurtarkar/text-classification
-    newName: shivamkurtarkar/standalone-text-classification
-    newTag: abf67de345659c9431fe95481040cb7a60a94bca
+    newName: shivamkurtarkar/text-classification
+    newTag: standalone-fa3b8357bcb3d2a4611fee3852399884b61d4b98
 
 secretGenerator:
   - name: model-deployment-info
