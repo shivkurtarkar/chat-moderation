@@ -13,6 +13,11 @@ configMapGenerator:
     files:
       - config.ini=config.prod
 
+images:
+  - name: shivamkurtarkar/messaging-app
+    newName: shivamkurtarkar/messaging-app
+    newTag: prod-b2719a28c6f163c3fda9ea06fcc78e8e7cffe7a6
+
 patches:
   - patch: |-
       - op: replace
