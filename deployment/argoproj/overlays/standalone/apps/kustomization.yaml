@@ -12,7 +12,7 @@ patches:
   - patch: |-
       - op: replace
         path: "/spec/source/path"
-        value: "deployment/frontend/manifest/overlays/production"
+        value: "deployment/frontend/manifest/overlays/standalone"
       - op: replace
         path: "/spec/destination/namespace"
         value: "standalone-chat-moderation"

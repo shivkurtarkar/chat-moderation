@@ -1,0 +1,8 @@
+[app]
+BOT_AVATAR=jdenticon
+USER_AVATAR=micah
+MODERATED_MESSAGE =## MESSAGE MODERATED ##
+
+[moderation_service]
+ENDPOINT=http://standalone-text-classification-svc/predict
+THRESHOLD=0.4213
