@@ -7,9 +7,9 @@ namePrefix: standalone-
 
 namespace: standalone-chat-moderation
 images:
-  - name: messaging-app
-    newName: shivamkurtarkar/messaging-app
-    newTag: 867701d0dc47bce86b08c2c7a644ed5f4e78d31b
+  - name: shivamkurtarkar/text-classification
+    newName: shivamkurtarkar/standalone-text-classification
+    newTag: abf67de345659c9431fe95481040cb7a60a94bca
 
 secretGenerator:
   - name: model-deployment-info

@@ -11,8 +11,13 @@ export RUN_ID 		:=	3cfafa786d1643719efc78e9f7251402
 export MLFLOW_EXPERIMENT_ID 	:=	1
 export MODEL_LOCATION := ./mlruns/1
 
-IMAGE_NAME:=text-classification
-IMAGE_VER:=v2
+BUILD_EXTRA_ARGS:=$(shell echo ' -f with_weight_file.dockerfile')
+IMAGE_PREFIX:=standalone-
+# BUILD_EXTRA_ARGS:=
+# IMAGE_PREFIX:=
+
+IMAGE_NAME:=${IMAGE_PREFIX}text-classification
+IMAGE_VER:=$(shell git log -1 --format=%H)
 IMAGE_FULL_NAME:=${IMAGE_NAME}:${IMAGE_VER}
 REGISTRY:=shivamkurtarkar
 
@@ -26,7 +31,7 @@ test:
 	python test_deployment.py
 
 build:
-	docker build -t ${IMAGE_FULL_NAME} .
+	docker build -t ${IMAGE_FULL_NAME} ${BUILD_EXTRA_ARGS} .
 	# kind load docker-image ${IMAGE_NAME}
 	docker tag ${IMAGE_FULL_NAME}  ${REGISTRY}/${IMAGE_FULL_NAME}
 	docker push ${REGISTRY}/${IMAGE_FULL_NAME}
