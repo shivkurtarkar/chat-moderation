@@ -11,8 +11,10 @@ export RUN_ID 		:=	3cfafa786d1643719efc78e9f7251402
 export MLFLOW_EXPERIMENT_ID 	:=	1
 export MODEL_LOCATION := ./mlruns/1
 
+## without model registry
 BUILD_EXTRA_ARGS:=$(shell echo ' -f with_weight_file.dockerfile')
 IMAGE_PREFIX:=standalone-
+## using model registry
 # BUILD_EXTRA_ARGS:=
 # IMAGE_PREFIX:=
 
