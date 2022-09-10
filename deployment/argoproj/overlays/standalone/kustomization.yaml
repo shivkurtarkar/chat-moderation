@@ -10,6 +10,9 @@ patches:
       - op: replace
         path: "/spec/source/path"
         value: "deployment/argoproj/overlays/standalone/apps"
+      - op: replace
+        path: "/spec/source/repoURL"
+        value: "https://github.com/shivkurtarkar/chat-moderation.git"
     target:
       kind: Application
       name: chat-moderation-root
