@@ -2,17 +2,20 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- ../../base
+  - ../../base
 namePrefix: production-
 
 namespace: production-chat-moderation
 images:
-- name: shivamkurtarkar/text-classification
-  newName: shivamkurtarkar/text-classification
-  newTag: prod-05b16baf6197842c748ae47912d3d6363b2f0088
+  - name: shivamkurtarkar/text-classification
+    newName: shivamkurtarkar/text-classification
+    newTag: prod-05b16baf6197842c748ae47912d3d6363b2f0088
 
 secretGenerator:
-- behavior: merge
-  envs:
-  - model-deployment-info.env
-  name: model-deployment-info
+  - name: model-deployment-info
+    behavior: merge
+    envs:
+      - model-deployment-info.env
+
+patchesStrategicMerge:
+  - patch/deployment-env.yaml
