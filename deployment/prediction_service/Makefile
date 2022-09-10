@@ -5,8 +5,10 @@ export MLFLOW_S3_IGNORE_TLS		:=	true
 export AWS_ACCESS_KEY_ID		:=	admin
 export AWS_SECRET_ACCESS_KEY	:=	password
 
-export RUN_ID 		:=	3cfafa786d1643719efc78e9f7251402
 export EXPERIMENT 	:=	text-moderation-model
+
+export RUN_ID 		:=	3cfafa786d1643719efc78e9f7251402
+export MLFLOW_EXPERIMENT_ID 	:=	1
 export MODEL_LOCATION := ./mlruns/1
 
 IMAGE_NAME:=text-classification
