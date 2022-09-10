@@ -15,7 +15,8 @@ from reddit_classifier import RedditClassifier
 
 def get_model_location(run_id, experiment_id):
     """Gets model file location"""
-    model_location = os.getenv('MODEL_LOCATION')
+    model_location = os.getenv('MODEL_LOCATION', None)
+    print(f'model_location : {model_location}')
     if model_location is not None:
         return f'{model_location}/{run_id}/artifacts'
     model_bucket = os.getenv('MODEL_BUCKET', 'mlflow')
