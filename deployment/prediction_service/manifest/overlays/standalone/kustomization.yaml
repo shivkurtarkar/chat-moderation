@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ../../base
+  - ns.yaml
 namePrefix: standalone-
 
 namespace: standalone-chat-moderation
