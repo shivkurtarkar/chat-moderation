@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../../base/apps
+  # - ns.yaml
+namePrefix: standalone-
+
+namespace: argocd
+
+patches:
+  - patch: |-
+      - op: replace
+        path: "/spec/source/path"
+        value: "deployment/frontend/manifest/overlays/production"
+      - op: replace
+        path: "/spec/destination/namespace"
+        value: "standalone-chat-moderation"
+    target:
+      kind: Application
+      name: messaging-app
+  - patch: |-
+      - op: replace
+        path: "/spec/source/path"
+        value: "deployment/prediction_service/manifest/overlays/standalone"
+      - op: replace
+        path: "/spec/destination/namespace"
+        value: "standalone-chat-moderation"
+    target:
+      kind: Application
+      name: ml-text-classification

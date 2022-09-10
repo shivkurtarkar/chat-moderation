@@ -4,13 +4,13 @@ This is poc of Chat moderation part of chat application.
 Problem:
 Everyone uses social network platform to interact over long distance or to stay in connected.With
 this innovation world has become more intimate, accessible and connected. But with good part comes
-bad parts as well. Online bulling, scams, frauds have become easier to perform. Hence there is a 
-growing need for better realtime message moderation to alert the platform owners who can take 
+bad parts as well. Online bulling, scams, frauds have become easier to perform. Hence there is a
+growing need for better realtime message moderation to alert the platform owners who can take
 actions to keep their users safe. Keeping users safe also helps them become more free and open to
-interaction and collabration. Thus benifiting whole community. 
+interaction and collabration. Thus benifiting whole community.
 
 
-## Dataset 
+## Dataset
 -   [rscience-popular-comment-removal](https://www.kaggle.com/datasets/areeves87/rscience-popular-comment-removal?resource=download)<br>
 
 -- other datasets
@@ -20,7 +20,7 @@ interaction and collabration. Thus benifiting whole community.
 <br>
 
 ## Tech stack
-- Deployment platform: kubernetes, 
+- Deployment platform: kubernetes,
 - Experiment tracking: MLFLOW
 - Workflow orchestration: argo workflow
 - CI/CD: github, argo workflow, argo cd
@@ -42,14 +42,14 @@ kubectl wait --namespace ingress-nginx   --for=condition=ready pod   --selector=
 
 ## setup argo-cd
 ```
-kubectl apply -k  deployment/argo-cd/overlays/production/ 
+kubectl apply -k  deployment/argo-cd/overlays/production/
 ```
 use http for just deployment
 or fork and use ssh credentials for full setup with pipeline and cicd
-update credentials in argocd-repo-creds.yaml 
+update credentials in argocd-repo-creds.yaml
 setup repository credentials
 ```
-kubectl apply -f argocd-repo-creds.yaml 
+kubectl apply -f argocd-repo-creds.yaml
 ```
 access argocd at https://argo-cd.127.0.0.1.nip.io
 
@@ -82,7 +82,27 @@ kubectl apply -k deployment/cicd-workflow/workflows/
 cd workflow
 python -m pipenv install
 python -m pipenv shell
-kubectl -n argo  create secret generic kagglekeys --from-file=kaggle.json 
+kubectl -n argo  create secret generic kagglekeys --from-file=kaggle.json
 $make argo_workflow
 
 ## deploy appliation
+
+to change repo url
+find ./ -type f -exec sed -i -e 's+git@github.com:shivkurtarkar/chat-moderation.git+forkedrepo_name+g' {} \;
+to change docker repository name
+find ./ -type f -exec sed -i -e 's+shivamkurtarkar+dockerhub_accout_name+g' {} \;
+
+
+cat ~/.docker/config.json | base64 -w0
+```
+apiVersion: v1
+kind: Secret
+metadata:
+  name: registrypullsecret
+data:
+  .dockerconfigjson: <base-64-encoded-json-here>
+type: kubernetes.io/dockerconfigjson
+```
+
+
+pre-commit install

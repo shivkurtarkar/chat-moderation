@@ -35,6 +35,7 @@ def training_pipeline(argo_host, argo_token):
     unique_code= str(uuid.uuid4())
     workflow_name= f'download-preprocess-{unique_code}'
     runin_namespace ='argo'
+    dataset = 'reddit_200k'
     with Workflow(workflow_name, WorkflowService(
             host=argo_host,
             token=argo_token,
@@ -70,7 +71,7 @@ def training_pipeline(argo_host, argo_token):
             func_params=[{
                 "raw_data_path" :dataset_path,
                 "dest_path": dataset_path,
-                "dataset": "reddit"
+                "dataset": dataset
             }],
             input_artifacts=[InputArtifact("dataset", dataset_path, "download-kaggle-data", "dataset")],            
             output_artifacts=[OutputArtifact("dataset", dataset_path)],
@@ -83,7 +84,7 @@ def training_pipeline(argo_host, argo_token):
             train_model,            
             func_params=[{
                 "data_path" :dataset_path,
-                "dataset": "reddit",
+                "dataset": dataset,
                 "experiment": "text-moderation-model"                
             }],
             variables=[
