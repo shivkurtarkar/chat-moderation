@@ -11,15 +11,15 @@ export RUN_ID 		:=	3cfafa786d1643719efc78e9f7251402
 export MLFLOW_EXPERIMENT_ID 	:=	1
 export MODEL_LOCATION := ./mlruns/1
 
-## without model registry
-BUILD_EXTRA_ARGS:=$(shell echo ' -f with_weight_file.dockerfile')
-IMAGE_PREFIX:=standalone-
 ## using model registry
-# BUILD_EXTRA_ARGS:=
-# IMAGE_PREFIX:=
+BUILD_EXTRA_ARGS:=
+IMAGE_PREFIX:=
+## without model registry
+# BUILD_EXTRA_ARGS:=$(shell echo ' -f with_weight_file.dockerfile')
+# IMAGE_PREFIX:=standalone-
 
-IMAGE_NAME:=${IMAGE_PREFIX}text-classification
-IMAGE_VER:=$(shell git log -1 --format=%H)
+IMAGE_NAME:=text-classification
+IMAGE_VER:=${IMAGE_PREFIX}$(shell git log -1 --format=%H)
 IMAGE_FULL_NAME:=${IMAGE_NAME}:${IMAGE_VER}
 REGISTRY:=shivamkurtarkar
 
