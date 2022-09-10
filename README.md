@@ -53,6 +53,20 @@ kubectl apply -f argocd-repo-creds.yaml
 ```
 access argocd at https://argo-cd.127.0.0.1.nip.io
 
+
+
+###  To run standalone
+Setup repo credentials
+```
+kubectl apply -f argocd-repo-creds.yaml
+```
+deploy standalone
+```
+kubectl apply -k deployment/argoproj/overlays/standalone/
+```
+
+### for full setup
+
 run following commands to create applications
 kubectl apply -k  deployment/argoproj/overlays/staging/
 kubectl apply -k  deployment/argoproj/overlays/production/
