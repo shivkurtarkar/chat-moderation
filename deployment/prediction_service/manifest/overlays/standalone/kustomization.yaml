@@ -16,3 +16,6 @@ secretGenerator:
     behavior: merge
     envs:
       - model-deployment-info.env
+
+patchesStrategicMerge:
+  - patch/deployment-env.yaml

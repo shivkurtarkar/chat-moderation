@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: text-classification-app
+spec:
+  template:
+    spec:
+      containers:
+        - name: text-classification-app
+          env:
+            - name: MLFLOW_TRACKING_URI
+              value: "http://mlflow-tracking-service.mlflow.svc.cluster.local:5000/"
+            - name: MLFLOW_S3_ENDPOINT_URL
+              value: "http://minio.mlflow.svc.cluster.local:9000/"
+            - name: AWS_ACCESS_KEY_ID
+              value: "admin"
+            - name: AWS_SECRET_ACCESS_KEY
+              value: "password"
+            - name: MLFLOW_S3_IGNORE_TLS
+              value: "true"

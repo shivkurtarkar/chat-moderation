@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: text-classification-app
+spec:
+  template:
+    spec:
+      containers:
+        - name: text-classification-app
+          env:
+            - name: MLFLOW_EXPERIMENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: model-deployment-info
+                  key: MLFLOW_EXPERIMENT_ID
+            - name: MODEL_LOCATION
+              valueFrom:
+                secretKeyRef:
+                  name: model-deployment-info
+                  key: MODEL_LOCATION
