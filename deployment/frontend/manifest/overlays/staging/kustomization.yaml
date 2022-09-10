@@ -2,29 +2,27 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - ../../base
+- ../../base
 namePrefix: staging-
 
 namespace: staging-chat-moderation
 
 configMapGenerator:
-  - behavior: merge
-    files:
-      - config.ini=config.staging
-    name: messaging-config
+- behavior: merge
+  files:
+  - config.ini=config.staging
+  name: messaging-config
 images:
-  - name: messaging-app
-    newName: shivamkurtarkar/messaging-app
-    newTag: stag-a02efe245680db703b8b3d5d3ee0eca29e8ebf59
-  - name: shivamkurtarkar/messaging-app
-    newName: shivamkurtarkar/messaging-app
-    newTag: stag-8ab30216218ae76dae22a09b8ffdcd9f12510b3b
+- name: messaging-app
+  newName: shivamkurtarkar/messaging-app
+  newTag: stag-a02efe245680db703b8b3d5d3ee0eca29e8ebf59
+- name: shivamkurtarkar/messaging-app
+  newName: shivamkurtarkar/messaging-app
+  newTag: stag-b2719a28c6f163c3fda9ea06fcc78e8e7cffe7a6
 
 patches:
-  - patch: |-
-      - op: replace
-        path: "/spec/rules/0/host"                
-        value: "staging.app.127.0.0.1.nip.io"
-    target:
-      kind: Ingress
-      name: messaging-app-ingress
+- patch: "- op: replace\n  path: \"/spec/rules/0/host\"                \n  value:
+    \"staging.app.127.0.0.1.nip.io\""
+  target:
+    kind: Ingress
+    name: messaging-app-ingress
