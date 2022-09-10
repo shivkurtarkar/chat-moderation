@@ -3,7 +3,6 @@ kind: Kustomization
 
 resources:
   - ../../../base/apps
-  - ns.yaml
 namePrefix: standalone-
 
 namespace: argocd
