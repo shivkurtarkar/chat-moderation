@@ -15,7 +15,7 @@ configMapGenerator:
 images:
 - name: shivamkurtarkar/messaging-app
   newName: shivamkurtarkar/messaging-app
-  newTag: prod-b54dd6983bc96ff2ce92e77fae3439399ae2f182
+  newTag: prod-aefc364bc0e0892ef346279154b0bdce5cebbb51
 
 patches:
 - patch: "- op: replace\n  path: \"/spec/rules/0/host\"                \n  value:
