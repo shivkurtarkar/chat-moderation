@@ -106,7 +106,7 @@ deploy standalone
 ```
 kubectl apply -k deployment/argoproj/overlays/standalone/
 ```
-access the app at `https://standalone.app.127.0.0.1.nip.io`
+access the app at https://standalone.app.127.0.0.1.nip.io
 
 ## B. For full setup
 
@@ -171,9 +171,9 @@ kubectl apply -k  secrets.yaml
 This will deploys argo workflow, mlflow tracking server, minio as artifact store and ci/cd workflow templates.
 
 To Access these use following links<br>
-argo workflow at `https://argo-wf.127.0.0.1.nip.io`<br>
-minio at `https://minio.127.0.0.1.nip.io`<br>
-mlflow at `https://mlflow.127.0.0.1.nip.io`
+argo workflow at https://argo-wf.127.0.0.1.nip.io <br>
+minio at https://minio.127.0.0.1.nip.io <br>
+mlflow at https://mlflow.127.0.0.1.nip.io 
 
 Run the following commands to deploy staging and production applications
 ```
@@ -182,8 +182,8 @@ kubectl apply -k  deployment/argoproj/overlays/production/
 ```
 
 Access these at following links<br>
-staging at `https://staging.app.127.0.0.1.nip.io/`<br>
-production at  `https://prod.app.127.0.0.1.nip.io/`
+staging at https://staging.app.127.0.0.1.nip.io/ <br>
+production at  https://prod.app.127.0.0.1.nip.io/
 
 
 ### run workflow
