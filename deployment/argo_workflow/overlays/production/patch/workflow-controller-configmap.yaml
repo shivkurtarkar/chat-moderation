@@ -3,7 +3,7 @@ data:
   artifactRepository: |
     s3:
       bucket: argobucket
-      endpoint: 172.18.0.2:30608
+      endpoint: minio.mlflow.svc.local:9000
       insecure: true
       accessKeySecret:
         name: my-minio-cred
