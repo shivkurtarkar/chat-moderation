@@ -19,7 +19,36 @@ Focus of these project is to build production machine learning service with expe
 - Monitoring: prometheus + graphana
 
 
-## Demo
+## Pictures
+![ui](images/ui.png)
+Frontend showing chat moderation system flagging the message.
+<br>
+<br>
+
+![mlflow](images/mlflow.png)
+Mlflow dashboard showing experiment results
+<br>
+<br>
+
+![training_pipeline](images/training_pipeline.png)
+Training workflow submitted to argoworkflow using hera.
+<br>
+<br>
+
+![prediction_service_ci_approval](images/prediction_service_ci_approval.png)
+CI workflow waiting for approval to push deployment to production
+<br>
+<br>
+
+![frontend_ci](images/frontend_ci.png)
+CI workflow after full deployment
+<br>
+<br>
+
+![argocd](images/argocd.png)
+<br>
+<br>
+
 ## Quick start
 I have provided 2 setups
 1. Standalone deployment where only ui and model is hosted
@@ -32,13 +61,13 @@ I have provided 2 setups
 kind create cluster --config kind.config
 ```
 
-## setup nginx Ingress
+### setup nginx Ingress
 ```
 kubectl apply --filename https://raw.githubusercontent.com/kubernetes/ingress-nginx/master/deploy/static/provider/kind/deploy.yaml
 kubectl wait --namespace ingress-nginx   --for=condition=ready pod   --selector=app.kubernetes.io/component=controller   --timeout=90s
 ```
 
-## setup argo-cd
+### setup argo-cd
 ```
 kubectl apply -k  deployment/argo-cd/overlays/production/
 ```
@@ -53,7 +82,7 @@ access argocd at https://argo-cd.127.0.0.1.nip.io
 
 
 
-### A. To run standalone
+## A. To run standalone
 Setup repo credentials
 ```
 kubectl apply -f argocd-repo-creds.yaml
@@ -64,7 +93,7 @@ kubectl apply -k deployment/argoproj/overlays/standalone/
 ```
 access the app at `https://standalone.app.127.0.0.1.nip.io`
 
-### B. For full setup
+## B. For full setup
 
 fork the repo and
 update the repo url using following sed command.
@@ -142,7 +171,7 @@ staging at `https://staging.app.127.0.0.1.nip.io/`<br>
 production at  `https://prod.app.127.0.0.1.nip.io/`
 
 
-## run workflow
+### run workflow
 Generate kaggle keys from kaggle account and use them to generate secret
 This will be used to download the dataset
 ```
@@ -168,14 +197,13 @@ pre-commit install
 ```
 
 
-### Scope for improvement
+## Scope for improvement
 1. Argo events for automated ci/cd trigger
-2. Building better model <br> few more datasets for explorations
+2. monitoring system
+3. Retrain and send an alert when data/target drift are detected
+4. Add IaC
+5. Building better model <br> few more datasets for explorations
 -   [jigsaw-toxic-comment-classification-challenge](https://www.kaggle.com/competitions/jigsaw-toxic-comment-classification-challenge/code)<br>
 -   [malignant-comment-classification](https://www.kaggle.com/datasets/surekharamireddy/malignant-comment-classification?select=train.csv)<br>
 -   [reddit-comment-score-prediction](https://www.kaggle.com/datasets/ehallmar/reddit-comment-score-prediction)<br>
-
-3. monitoring system
-4. Retrain and send an alert when data/target drift are detected
-5. Add IaC
 6. Dashboard for debuging models and insigts
