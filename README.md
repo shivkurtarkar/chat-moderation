@@ -10,14 +10,28 @@ This is an implementation of Chat moderation part of a group chat application. T
 
 Focus of these project is to build production machine learning service with experiment tracking, pipeline automation, observability and ci/cd rather than building the most accurate prediction model.
 
-
 ## Technical details
-- Deployment platform: kubernetes,
-- Experiment tracking: MLFLOW
-- Workflow orchestration: argo workflow
-- CI/CD: github, argo workflow, argo cd
-- Monitoring: prometheus + graphana
 
+- Deployment platform: kubernetes,
+- Experiment tracking: mlflow, minio, postgres
+- Workflow orchestration: argo workflow, hera (for making it simple to submit workflows)
+- CI/CD: github, argo workflow, argocd
+- Monitoring: prometheus + graphana (not implemented yet)
+
+
+
+
+#### High level overview
+
+
+I started with jupyter notebook in modeling dir.
+after building model, I converted it into a workflow. Argo workflow is used for handling pipeline and  Hera python library is used to submit the the workflow. you can find workflow scripts in workflow directory.
+For experiment tracking mlflow is been used. Mlflow is connected to postgres for storing experiment metadata and minio as model repository.
+Best model is deployed as flask api service while Chat ui is build using strimlit. both of these are located in deploymet/prediction_service and deployment/frontend respectively.
+Argocd is used for deploying applications and argo worflow is used for ci workflow. Ci templates can be found in deployment/cicd-workflow dir.
+All applications are described in yaml for argocd under deployment/argoproj. deployment/argoproj/infra points to all yaml for all tools including argocd, argoworkflow, mlflow, minio, postgres which plays supporting role.
+Precommit config and project configs are under deployment/prediction_service.
+Make file is been used to make it easy to build and run code locally.
 
 ## Pictures
 ![ui](images/ui.png)
@@ -46,6 +60,7 @@ CI workflow after full deployment
 <br>
 
 ![argocd](images/argocd.png)
+Argocd managing deployed applications.
 <br>
 <br>
 
