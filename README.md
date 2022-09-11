@@ -62,6 +62,7 @@ deploy standalone
 ```
 kubectl apply -k deployment/argoproj/overlays/standalone/
 ```
+access the app at `https://standalone.app.127.0.0.1.nip.io`
 
 ### B. For full setup
 
