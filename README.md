@@ -125,19 +125,19 @@ kubectl apply -k  secrets.yaml
 
 This will deploys argo workflow, mlflow tracking server, minio as artifact store and ci/cd workflow templates.
 
-to Access these use following links
-argo workflow at https://argo-wf.127.0.0.1.nip.io
-minio at https://minio.127.0.0.1.nip.io
-mlflow at https://mlflow.127.0.0.1.nip.io
+To Access these use following links<br>
+argo workflow at `https://argo-wf.127.0.0.1.nip.io`<br>
+minio at `https://minio.127.0.0.1.nip.io`<br>
+mlflow at `https://mlflow.127.0.0.1.nip.io`
 
 Run the following commands to deploy staging and production applications
-``
+```
 kubectl apply -k  deployment/argoproj/overlays/staging/
 kubectl apply -k  deployment/argoproj/overlays/production/
 ```
 
-Access these at following links
-staging at `https://staging.app.127.0.0.1.nip.io/`
+Access these at following links<br>
+staging at `https://staging.app.127.0.0.1.nip.io/`<br>
 production at  `https://prod.app.127.0.0.1.nip.io/`
 
 
@@ -174,7 +174,7 @@ pre-commit install
 -   [malignant-comment-classification](https://www.kaggle.com/datasets/surekharamireddy/malignant-comment-classification?select=train.csv)<br>
 -   [reddit-comment-score-prediction](https://www.kaggle.com/datasets/ehallmar/reddit-comment-score-prediction)<br>
 
-3. Better monitoring system
+3. monitoring system
 4. Retrain and send an alert when data/target drift are detected
 5. Add IaC
 6. Dashboard for debuging models and insigts
