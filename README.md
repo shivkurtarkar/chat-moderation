@@ -1,25 +1,17 @@
 # chat-moderation
-This is poc of Chat moderation part of chat application.
-
-Problem:
-Everyone uses social network platform to interact over long distance or to stay in connected.With
-this innovation world has become more intimate, accessible and connected. But with good part comes
-bad parts as well. Online bulling, scams, frauds have become easier to perform. Hence there is a
-growing need for better realtime message moderation to alert the platform owners who can take
-actions to keep their users safe. Keeping users safe also helps them become more free and open to
-interaction and collabration. Thus benifiting whole community.
 
 
-## Dataset
--   [rscience-popular-comment-removal](https://www.kaggle.com/datasets/areeves87/rscience-popular-comment-removal?resource=download)<br>
+### Problem Description:
+Everyone uses social networking platforms to interact over a long distance or to stay connected. With the invention of social networking platforms, the world has become more intimate, accessible, and connected. But recently we have seen over amplification of negative activities on these platforms. Online bullying, scams, and fraud have become easier to perform. Easy accesibility of these platforms by young generation, lack of understanding of thechnicalities of attacks by older generation and democratization of advance technologies as soon as they are invented (like deep fakes whoes full capability might not be yet be known)  makes it further alarming situation. Hence there is a growing need for better real-time message moderation to alert the platform owners who can take action to keep their users safe. Keeping users safe helps develop a healthy community where everyone can feel safe to share their genuine thoughts and open them up for collaboration with all.
 
--- other datasets
--   [jigsaw-toxic-comment-classification-challenge](https://www.kaggle.com/competitions/jigsaw-toxic-comment-classification-challenge/code)<br>
--   [malignant-comment-classification](https://www.kaggle.com/datasets/surekharamireddy/malignant-comment-classification?select=train.csv)<br>
--   [reddit-comment-score-prediction](https://www.kaggle.com/datasets/ehallmar/reddit-comment-score-prediction)<br>
-<br>
+![Architecture of chat moderation system](images/chat-moderation.jpg)
 
-## Tech stack
+This is an implementation of Chat moderation part of a group chat application. The project provides a dummy chat applicaiton and online service for predicting if a text sent needs moderation. Models have been trained on [rscience-popular-comment-removal](https://www.kaggle.com/datasets/areeves87/rscience-popular-comment-removal?resource=download) dataset from kaggle.
+
+Focus of these project is to build production machine learning service with experiment tracking, pipeline automation, observability and ci/cd rather than building the most accurate prediction model.
+
+
+## Technical details
 - Deployment platform: kubernetes,
 - Experiment tracking: MLFLOW
 - Workflow orchestration: argo workflow
@@ -27,9 +19,15 @@ interaction and collabration. Thus benifiting whole community.
 - Monitoring: prometheus + graphana
 
 
-# Getting Started
+## Demo
+## Quick start
+I have provided 2 setups
+1. Standalone deployment where only ui and model is hosted
+2. Full deployment where ci/cd, training workflow, experiment tracking server and staging and production builds are deployed.
 
-## Create kind cluster
+
+## Prerequisite
+### Create kind cluster
 ```
 kind create cluster --config kind.config
 ```
@@ -55,7 +53,7 @@ access argocd at https://argo-cd.127.0.0.1.nip.io
 
 
 
-###  To run standalone
+### A. To run standalone
 Setup repo credentials
 ```
 kubectl apply -f argocd-repo-creds.yaml
@@ -65,58 +63,118 @@ deploy standalone
 kubectl apply -k deployment/argoproj/overlays/standalone/
 ```
 
-### for full setup
+### B. For full setup
 
-run following commands to create applications
-kubectl apply -k  deployment/argoproj/overlays/staging/
-kubectl apply -k  deployment/argoproj/overlays/production/
-
-to create application refer here.
-
-## setup argo-workflow
+fork the repo and
+update the repo url using following sed command.
+Please note repo url needs to be set according to login method you intend argocd to use. (current ci/cd pipeline setup doesnt support https)
 ```
-kubectl apply -k  deployment/argo_workflow/overlays/production/
-```
-## create secrets
-```
-kubectl apply secrets-template.yaml
-```
-access argo workflow at https://argo-wf.127.0.0.1.nip.io
-
-## setup mlflow
-```
-kubectl apply -k deployment/mlflow_setup/manifest/overlays/production/
-```
-access mlflow at https://mlflow.127.0.0.1.nip.io
-## setup workflows resources
-```
-kubectl apply -k deployment/cicd-workflow/workflows/
-```
-## run workflow
-cd workflow
-python -m pipenv install
-python -m pipenv shell
-kubectl -n argo  create secret generic kagglekeys --from-file=kaggle.json
-$make argo_workflow
-
-## deploy appliation
-
-to change repo url
 find ./ -type f -exec sed -i -e 's+git@github.com:shivkurtarkar/chat-moderation.git+forkedrepo_name+g' {} \;
-to change docker repository name
+```
+
+Update docker repository name
+```
 find ./ -type f -exec sed -i -e 's+shivamkurtarkar+dockerhub_accout_name+g' {} \;
+```
 
+Fill out argocd-repo-creds.yaml. I have provided template for https and ssh login.
 
+Create secrets
+1. Docker credentials for pushing images
+Generate base 64 encoding of your docker credentials
+```
 cat ~/.docker/config.json | base64 -w0
+```
+Create secret file as secrets.yaml with following
 ```
 apiVersion: v1
 kind: Secret
 metadata:
-  name: registrypullsecret
+  name: regcred
 data:
   .dockerconfigjson: <base-64-encoded-json-here>
 type: kubernetes.io/dockerconfigjson
+---
+apiVersion: v1
+data:
+  config.json: <base-64-encoded-json-here>
+kind: Secret
+metadata:
+  name: argo-regcred
+  namespace: argo
+```
+2. github ssh key for pushing code after updating manifest by ci/cd pipeline
+```
+kubectl create secret generic github-creds \
+  --namespace=argo \
+  --from-literal=ssh-privatekey=<ssh-key> \
+  -o yaml
+
+```
+
+Build mlflow docker by running build_docker.sh inside mlflow_setup
+
+Deploy the infra structure
+```
+kubectl apply -k  deployment/argoproj/infra/
+```
+deploy secrets
+```
+kubectl apply -k  secrets.yaml
+```
+
+This will deploys argo workflow, mlflow tracking server, minio as artifact store and ci/cd workflow templates.
+
+to Access these use following links
+argo workflow at https://argo-wf.127.0.0.1.nip.io
+minio at https://minio.127.0.0.1.nip.io
+mlflow at https://mlflow.127.0.0.1.nip.io
+
+Run the following commands to deploy staging and production applications
+``
+kubectl apply -k  deployment/argoproj/overlays/staging/
+kubectl apply -k  deployment/argoproj/overlays/production/
+```
+
+Access these at following links
+staging at `https://staging.app.127.0.0.1.nip.io/`
+production at  `https://prod.app.127.0.0.1.nip.io/`
+
+
+## run workflow
+Generate kaggle keys from kaggle account and use them to generate secret
+This will be used to download the dataset
+```
+kubectl -n argo  create secret generic kagglekeys --from-file=kaggle.json
+```
+
+To submit workflow
+```
+cd workflow
+python -m pipenv install
+python -m pipenv shell
+make argo_workflow
+```
+
+From argo workflow ui
+you can trigger ci/cd workflows for prediction service and frontend
+For automated workflow argo events needs to be setup.
+
+
+To install precommit hooks run
+```
+pre-commit install
 ```
 
 
-pre-commit install
+### Scope for improvement
+1. Argo events for automated ci/cd trigger
+2. Building better model <br> few more datasets for explorations
+-   [jigsaw-toxic-comment-classification-challenge](https://www.kaggle.com/competitions/jigsaw-toxic-comment-classification-challenge/code)<br>
+-   [malignant-comment-classification](https://www.kaggle.com/datasets/surekharamireddy/malignant-comment-classification?select=train.csv)<br>
+-   [reddit-comment-score-prediction](https://www.kaggle.com/datasets/ehallmar/reddit-comment-score-prediction)<br>
+
+3. Better monitoring system
+4. Retrain and send an alert when data/target drift are detected
+5. Add IaC
+6. Dashboard for debuging models and insigts
