@@ -23,15 +23,15 @@ Focus of these project is to build production machine learning service with expe
 
 #### High level overview
 
-
-I started with jupyter notebook in modeling dir.
-after building model, I converted it into a workflow. Argo workflow is used for handling pipeline and  Hera python library is used to submit the the workflow. you can find workflow scripts in workflow directory.
+Project started with jupyter notebook in modeling dir.
+After building models, they are converted into a workflow. Argo workflow is used for handling pipeline and Hera python library is used to submit the the workflow. Workflow scripts are in workflow directory. Each step of pipeline has corresponding python file, download_datatset,  preprocess, training, and evaluation. workflow.py combines them all as a workflow.
 For experiment tracking mlflow is been used. Mlflow is connected to postgres for storing experiment metadata and minio as model repository.
 Best model is deployed as flask api service while Chat ui is build using strimlit. both of these are located in deploymet/prediction_service and deployment/frontend respectively.
 Argocd is used for deploying applications and argo worflow is used for ci workflow. Ci templates can be found in deployment/cicd-workflow dir.
 All applications are described in yaml for argocd under deployment/argoproj. deployment/argoproj/infra points to all yaml for all tools including argocd, argoworkflow, mlflow, minio, postgres which plays supporting role.
-Precommit config and project configs are under deployment/prediction_service.
+Precommit config and project configs are under in root directory.
 Make file is been used to make it easy to build and run code locally.
+Unit tests and integration tests are written only for prediction service.
 
 ## Pictures
 ![ui](images/ui.png)
@@ -173,7 +173,7 @@ This will deploys argo workflow, mlflow tracking server, minio as artifact store
 To Access these use following links<br>
 argo workflow at https://argo-wf.127.0.0.1.nip.io <br>
 minio at https://minio.127.0.0.1.nip.io <br>
-mlflow at https://mlflow.127.0.0.1.nip.io 
+mlflow at https://mlflow.127.0.0.1.nip.io
 
 Run the following commands to deploy staging and production applications
 ```
