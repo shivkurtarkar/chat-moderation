@@ -30,7 +30,14 @@ deployment:
 	FLASK_APP=deployment.py  flask run --host=0.0.0.0 --port=8000
 
 test:
-	python test_deployment.py
+	pytest tests -s
+
+integration_test:
+	make run &
+	bg_pid=$!
+	sleep 10
+	python integration-test/test_deployment.py
+	kill "${bg_pid}"
 
 build:
 	docker build -t ${IMAGE_FULL_NAME} ${BUILD_EXTRA_ARGS} .
