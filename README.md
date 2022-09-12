@@ -32,6 +32,7 @@ Argocd is used for deploying applications and argo worflow is used for ci workfl
 All applications are described in yaml for argocd under deployment/argoproj. deployment/argoproj/infra points to all yaml for all tools including argocd, argoworkflow, mlflow, minio, postgres which plays supporting role.
 Precommit config and project configs are under in root directory.
 Make file is been used to make it easy to build and run code locally.
+Unit tests and integration tests are written only for prediction service.
 
 ## Pictures
 ![ui](images/ui.png)
